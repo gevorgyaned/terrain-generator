@@ -14,5 +14,6 @@ vec2 util::get_random_gradient(int x)
 
 double util::interpolate(double a, double b, double t)
 {
-    return (a - b) * ((t * (t * 6.0 - 15.0) + 10.0) * t * t * t) + a;
+    double f = t * t * t * (t * (t * 6 - 15) + 10);
+    return a + f * (b - a);
 }

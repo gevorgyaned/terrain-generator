@@ -3,9 +3,8 @@
 
 class TerrainReader {
 public:
-    
-
-
+    TerrainReader(const char *filename)    
+       
 };
 
 #enfif /* TERRAIN_H */
