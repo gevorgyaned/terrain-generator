@@ -11,6 +11,8 @@
 namespace util {
     vec2 get_random_gradient(int x);
 
+	std::string read_to_string(const char *filename); 
+
     double interpolate(double a, double b, double t);
 };
 

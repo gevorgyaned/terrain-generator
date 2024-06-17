@@ -1,4 +1,5 @@
 #include "../include/utility.h"
+#include <fstream>
 
 vec2 util::get_random_gradient(int x)
 {
@@ -16,4 +17,19 @@ double util::interpolate(double a, double b, double t)
 {
     double f = t * t * t * (t * (t * 6 - 15) + 10);
     return a + f * (b - a);
+}
+
+
+std::string util::read_to_string(const char *filename)
+{
+    std::ifstream stream(filename);
+
+    std::string result;
+    std::string line;
+    while (std::getline(stream, line)) {
+        result += line;
+    }
+    
+    stream.close();
+    return result;
 }

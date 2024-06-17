@@ -42,6 +42,6 @@ double PerlinNoise::get_value(double x, double y)
 
 vec2 PerlinNoise::get_gradient_vec(int x, int y) const
 {
-    int index = m_permutations[(m_permutations[x] + y) % m_size];
+    int index = m_permutations[(m_permutations[x % m_size] + y % m_size) % m_size];
     return util::get_random_gradient(index);
 }   

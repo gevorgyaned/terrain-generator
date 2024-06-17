@@ -1,7 +1,10 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "external/glad/glad.h"
+#include "../../external/glad/glad.h"
+#include "../../external/glm/glm/glm.hpp"
+#include "../../external/glm/glm/gtc/matrix_transform.hpp"
+#include "../../external/glm/glm/gtc/type_ptr.hpp"
 
 #include <iostream>
 #include <fstream>
@@ -51,7 +54,8 @@ public:
 	GLuint create_program(GLuint frag_shader, GLuint vert_shader) const;
 	void set_float(const std::vector<float>& value, const std::string& name);
 	void set_int(const std::vector<int>& value, const std::string& name);
-	
+    void set_matrix(const glm::mat4&, const std::string& name);
+
 private:
 	void compile_shader();
 

@@ -21,6 +21,7 @@ public:
 private:
     void fill_permutations();
     vec2 get_gradient_vec(int x, int y) const;
+    std::size_t get_size() const;
 
 private:
     const std::size_t m_size;

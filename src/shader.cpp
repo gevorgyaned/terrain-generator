@@ -97,3 +97,9 @@ void Shader::set_int(const std::vector<int>& value, const std::string& name)
 	}
 }
 
+void Shader::set_matrix(const glm::mat4& matrix, const std::string& name)
+{
+    GLuint uniform_loc = glGetUniformLocation(m_id, name.c_str());
+    glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
