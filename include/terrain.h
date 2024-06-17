@@ -40,22 +40,6 @@ public:
         glBindVertexArray(0);
     }
 
-    void debug() const {
-        std::cout << "m_vertices: " << std::endl;
-        for (const auto& x : m_vertices) {
-            std::cout << x << ", ";
-        }
-
-        std::cout << "\b\b" << std::endl;
-
-        std::cout << "m_indicies: " << std::endl;
-        for (const auto& x : m_indicies) {
-            std::cout << x << ", ";
-        }
-
-        std::cout << "\b\b" << std::endl;
-    }
-
 public:
     int get_vertices_size() const;
     int get_indicies_size() const;

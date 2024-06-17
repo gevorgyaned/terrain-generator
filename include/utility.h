@@ -6,8 +6,6 @@
 
 #include "vec2.h"
 
-#define DBG(x) std::cout << "dbg##x" << std::endl;
-
 namespace util {
     vec2 get_random_gradient(int x);
 

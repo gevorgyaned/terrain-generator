@@ -28,6 +28,7 @@ std::string util::read_to_string(const char *filename)
     std::string line;
     while (std::getline(stream, line)) {
         result += line;
+        result.push_back('\n');
     }
     
     stream.close();

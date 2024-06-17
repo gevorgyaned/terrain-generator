@@ -16,7 +16,7 @@ public:
         , m_permutations ( m_size  )
     { fill_permutations(); }
 
-    double get_value(double x, double y);
+    double get_value(double x, double y) override;
 
 private:
     void fill_permutations();
