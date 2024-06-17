@@ -12,20 +12,38 @@ int TerrainMesh::get_indicies_size() const {
     return m_indicies.size();
 }
 
+double fbm(NoiseGenerator& noise, float x, float y) {
+    double val = 0.f;
+    double frequency = 0.3f;
+    double amplitude = 2;
+
+    for (int i = 0; i < 7; ++i) {
+        val = noise.get_value(x * frequency, y * frequency) * amplitude;
+        frequency *= 0.5f;
+        amplitude /= 2.f;
+    }
+
+    return val * 7.0;
+}
+
 void TerrainMesh::generate_buffers() 
 {
     int vert_count = 0;
-    double distance = 0.05;
+    double distance = 0.10;
     double z_beg = -0.90;
 
+    double big = 0.0;
+    double small = std::numeric_limits<float>::infinity();
     for (int i = 0; i < m_width; ++i) {
         double x_beg = -0.90;
 
         for (int j = 0; j < m_height; ++j) {
-            double height = (m_gen.get_value(i + rand() % 100 / m_scale, j + rand() % 100  / m_scale) / 2.0) + 0.5;
-
+            // double height = fbm(m_gen, static_cast<double>(i) / m_scale, static_cast<double>(j) / m_scale);
+            double height = m_gen.get_value(static_cast<float>(i) / m_scale, static_cast<float>(j) / m_scale);
+            big = std::max(big, height);
+            small = std::min(small, height);
             m_vertices[vert_count++] = x_beg;
-            m_vertices[vert_count++] = height - 0.5;
+            m_vertices[vert_count++] = height;
             m_vertices[vert_count++] = z_beg;
             x_beg += distance;
         }
@@ -33,7 +51,7 @@ void TerrainMesh::generate_buffers()
         z_beg += distance;
     }
 
-    std::cout << "vert_count: " << vert_count << std::endl;
+    std::cout << "min: " << small << "max: " << big << std::endl;
 
     int ind_count = 0;
     for (int i = 0; i < m_width - 1; ++i) {
@@ -47,8 +65,6 @@ void TerrainMesh::generate_buffers()
             m_indicies[ind_count++] = i * m_width + j + m_width + 1;
         }
     }
-
-    std::cout << "ind_count: " << ind_count << std::endl;
 }
 
 GLuint TerrainMesh::EBO() const {

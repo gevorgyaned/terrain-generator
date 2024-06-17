@@ -11,7 +11,7 @@
 class TerrainMesh {
 public:
     TerrainMesh(NoiseGenerator& gen, std::size_t width = 100, std::size_t height = 100, 
-            double scale = 40.0) 
+            double scale = 400.0) 
         : m_gen { gen }
         , m_width { width + 1 }
         , m_height { height + 1 }
