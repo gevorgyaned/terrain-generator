@@ -13,6 +13,7 @@ std::variant<GLuint, std::string> Shader::compile_shader(const std::string& cont
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
 		glGetShaderInfoLog(shader, 512, NULL, const_cast<GLchar *>(log_info.c_str()));
+		std::cout << log_info << std::endl;
         return log_info;
 	}
 
@@ -32,6 +33,7 @@ std::variant<GLuint, std::string> Shader::create_program(GLuint frag_shader, GLu
 	glGetProgramiv(id, GL_LINK_STATUS, &success);
 	if (success == GL_FALSE) {
 		glGetProgramInfoLog(id, 512, NULL, const_cast<GLchar *>(log_info.c_str()));
+		std::cout << log_info << std::endl;
         return log_info;
 	}
 

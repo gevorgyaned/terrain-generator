@@ -12,13 +12,10 @@ public:
     void render_terrain() const;
     void set_polygon_mode(GLenum mode) const;
     
-
 private:
     TerrainMesh& m_terrain;
     Shader m_program;
-    Camera m_camera;
 };
 
-
-
 #endif /* TERRAIN_RENDERER_H */
+

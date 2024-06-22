@@ -2,7 +2,6 @@
 
 void PerlinNoise::fill_permutations()
 {
-    std::cout << m_permutations.size() << std::endl;
     for (int i = 0; i < m_size; ++i) {
         m_permutations[i] = i + 1;
     }

@@ -1,10 +1,12 @@
 #version 330 core
 
 in float value;
+out vec4 FragColor;
+
+uniform vec3 col;
 
 void main()
 {
-    vec3 color = vec3(1.f, 0.5f, 0.f);
-    gl_FragColor = vec4(color, 1.f);
+    FragColor = vec4(col, 1.f);
 }
 
