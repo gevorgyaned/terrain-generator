@@ -12,8 +12,9 @@
 class PerlinNoise : public NoiseGenerator {
 public:
     PerlinNoise(std::size_t size = 256) 
-        : m_size { size * 2 }
-        , m_permutations ( m_size  )
+        : m_size(size * 2)
+        , m_permutations(m_size)
+        , m_rand_grad(m_size)
     { fill_permutations(); }
 
     double get_value(double x, double y) override;
@@ -26,6 +27,7 @@ private:
 private:
     const std::size_t m_size;
     std::vector<int> m_permutations;
+    std::vector<vec2> m_rand_grad;
 };
 
 #endif /* PERLIN_H */

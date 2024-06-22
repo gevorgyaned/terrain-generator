@@ -1,24 +1,10 @@
-#include "../include/utility.h"
-#include <fstream>
-
-vec2 util::get_random_gradient(int x)
-{
-    const unsigned w = 8 * sizeof(unsigned);
-    const unsigned s = w / 2; 
-    unsigned a = x, b = x;
-    a *= 3284157443; b ^= a << s | a >> w-s;
-    b *= 1911520717; a ^= b << s | b >> w-s;
-    a *= 2048419325;
-    double random = a * (3.14159265);
-    return vec2(cos(random), sin(random));
-}
+#include "utility.h"
 
 double util::interpolate(double a, double b, double t)
 {
     double f = t * t * t * (t * (t * 6 - 15) + 10);
     return a + f * (b - a);
 }
-
 
 std::string util::read_to_string(const char *filename)
 {
@@ -33,4 +19,18 @@ std::string util::read_to_string(const char *filename)
     
     stream.close();
     return result;
+}
+
+double util::fbm(NoiseGenerator& noise, float x, float y) {
+    double val = 0.0;
+    double frequency = 0.5;
+    double amplitude = 3.0;
+
+    for (int i = 0; i < 6; ++i) {
+        val += noise.get_value(x * frequency, y * frequency) * amplitude;
+        frequency *= 2.0;
+        amplitude *= 0.5;
+    }
+
+    return val;
 }

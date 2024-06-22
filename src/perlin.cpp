@@ -1,15 +1,17 @@
-#include "../include/perlin.h"
+#include <perlin.h>
 
 void PerlinNoise::fill_permutations()
 {
+    std::random_device rd;
+    std::mt19937 g(rd());
+    std::uniform_real_distribution<> dis(0.0, 100.0);
+
     for (int i = 0; i < m_size; ++i) {
+        m_rand_grad[i] = vec2(sin(dis(g)), cos(dis(g)));
         m_permutations[i] = i + 1;
     }
 
-    std::random_device rd;
-    std::mt19937 g(rd());
     std::shuffle(m_permutations.begin(), m_permutations.end(), g);
-
     m_permutations.insert(m_permutations.end(), m_permutations.begin(), 
             m_permutations.end());
 }
@@ -41,6 +43,5 @@ double PerlinNoise::get_value(double x, double y)
 
 vec2 PerlinNoise::get_gradient_vec(int x, int y) const
 {
-    int index = m_permutations[(m_permutations[x % m_size] + y % m_size) % m_size];
-    return util::get_random_gradient(index);
+    return m_rand_grad[(m_permutations[x % m_size] + y % m_size) % m_size];
 }   

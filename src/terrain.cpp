@@ -12,19 +12,6 @@ int TerrainMesh::get_indicies_size() const {
     return m_indicies.size();
 }
 
-double fbm(NoiseGenerator& noise, float x, float y) {
-    double val = 0.0;
-    double frequency = 0.5;
-    double amplitude = 4.0;
-
-    for (int i = 0; i < 6; ++i) {
-        val += noise.get_value(x * frequency, y * frequency) * amplitude;
-        frequency *= 2.0;
-        amplitude *= 0.5;
-    }
-
-    return val;
-}
 
 void TerrainMesh::generate_buffers() 
 {
@@ -38,7 +25,7 @@ void TerrainMesh::generate_buffers()
         double x_beg = -0.90;
 
         for (int j = 0; j < m_height; ++j) {
-            double height = fbm(m_gen, static_cast<double>(i) / m_scale, static_cast<double>(j) / m_scale);
+            double height = util::fbm(m_gen, static_cast<double>(i) / m_scale, static_cast<double>(j) / m_scale);
            // double height = m_gen.get_value(static_cast<float>(i) / m_scale, static_cast<float>(j) / m_scale);
             big = std::max(big, height);
             small = std::min(small, height);

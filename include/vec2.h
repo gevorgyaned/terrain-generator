@@ -3,7 +3,7 @@
 
 struct vec2 {
 public:
-    vec2(double _x, double _y) 
+    vec2(double _x = 0.0, double _y = 0.0) 
         : x { _x }
         , y { _y }
     { }

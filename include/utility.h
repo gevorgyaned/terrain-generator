@@ -1,17 +1,16 @@
 #ifndef UTIL_H
 #define UTIL_H
 
-#include <iostream>
-#include <cmath>
+#include <fstream>
 
-#include "vec2.h"
+#include "noise_gen.h"
 
 namespace util {
-    vec2 get_random_gradient(int x);
-
 	std::string read_to_string(const char *filename); 
 
     double interpolate(double a, double b, double t);
+
+    double fbm(NoiseGenerator& noise, float x, float y);
 };
 
 
