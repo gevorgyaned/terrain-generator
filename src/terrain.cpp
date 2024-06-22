@@ -46,8 +46,8 @@ void TerrainMesh::generate_buffers()
             m_indicies[ind_count++] = i * m_width + j + m_width + 1;
 
             m_indicies[ind_count++] = i * m_width + j;
-            m_indicies[ind_count++] = i * m_width + j + 1;
             m_indicies[ind_count++] = i * m_width + j + m_width + 1;
+            m_indicies[ind_count++] = i * m_width + j + 1;
         }
     }
 }

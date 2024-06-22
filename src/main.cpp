@@ -48,6 +48,13 @@ int main()
         exit(1);
     }   
 
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+    glFrontFace(GL_CCW);
+
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
+
     auto shader_res = Shader::create("../shaders/vertex.glsl", "../shaders/fragment.glsl");
     if (const auto *err_value = std::get_if<std::string>(&shader_res)) {
         std::cerr << err_value << std::endl;
@@ -56,7 +63,7 @@ int main()
 
     auto shader = std::get<Shader>(shader_res);
     PerlinNoise noise;
-    TerrainMesh mesh(noise, 1000, 1000);
+    TerrainMesh mesh(noise, 100, 100);
 
     while (!glfwWindowShouldClose(window)) {
         process(window);
@@ -65,31 +72,32 @@ int main()
         delta_time = current - last_frame;
         last_frame = current;
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        shader.use();
 
         glm::mat4 model(1.f);
         glm::mat4 view = camera.get_view_matrix();
         glm::mat4 proj = glm::perspective(glm::radians(45.0f),  SCR_WIDTH / static_cast<float>(SCR_HEIGHT), 0.1f, 100.f);
 
-        shader.set_float({1.0f, 0.31f, 0.51f}, "col");
-        shader.set_matrix(view,  "view");
-        shader.set_matrix(proj,  "proj");
-        shader.set_matrix(model, "model");
+        shader.use();
 
-        glBindVertexArray(mesh.VAO());           
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        shader.set_matrix(view, "view");
+        shader.set_matrix(proj, "proj");
+        shader.set_matrix(model, "model");
+        shader.set_float({0.0f, 0.f, 1.f}, "col");
+
+        glBindVertexArray(mesh.VAO());
         glEnableVertexAttribArray(0);
         glDrawElements(GL_TRIANGLES, mesh.get_indicies_size(), GL_UNSIGNED_INT, 0);
-       
 
-        // drawing 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        shader.set_float({0.1f, 0.1f, 0.1f}, "col");
-
+        glEnable(GL_POLYGON_OFFSET_LINE);
+        glPolygonOffset(-1.0f, -1.0f); 
+        shader.set_float({1.0f, 0.34f, 0.48f}, "col"); 
+        
         glDrawElements(GL_TRIANGLES, mesh.get_indicies_size(), GL_UNSIGNED_INT, 0);
+        glDisable(GL_POLYGON_OFFSET_LINE);
 
         glfwSwapBuffers(window);
         glfwPollEvents();    
