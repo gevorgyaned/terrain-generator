@@ -63,7 +63,7 @@ int main()
 
     auto shader = std::get<Shader>(shader_res);
     PerlinNoise noise;
-    TerrainMesh mesh(noise, 100, 100);
+    TerrainMesh mesh(noise, 1000, 1000);
 
     while (!glfwWindowShouldClose(window)) {
         process(window);

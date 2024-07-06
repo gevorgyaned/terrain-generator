@@ -14,12 +14,13 @@ add_executable(TerrainGeneration
     src/utility.cpp
     src/vec2.cpp
 	src/camera.cpp
-    ../external/glad/glad.c
+    external/glad/glad.c
 )
 
 target_include_directories(TerrainGeneration PRIVATE
     ${PROJECT_SOURCE_DIR}/include
-    ${PROJECT_SOURCE_DIR}/../external/glm
+    ${PROJECT_SOURCE_DIR}/external/glm
+    ${PROJECT_SOURCE_DIR}/external/glad
 )
 
 target_link_libraries(TerrainGeneration PRIVATE glfw)
