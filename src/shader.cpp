@@ -43,7 +43,7 @@ std::variant<GLuint, std::string> Shader::create_program(GLuint frag_shader, GLu
 	return id;
 }
 
-void Shader::set_float(const std::vector<float>& value, const std::string& name)
+Shader& Shader::set_float(const std::vector<float>& value, const std::string& name)
 {
 	if (value.size() > 4) {
 		throw std::runtime_error("too big value");
@@ -64,9 +64,11 @@ void Shader::set_float(const std::vector<float>& value, const std::string& name)
 		glUniform4f(uniform_loc, value[0], value[1], value[2], value[3]);
 		break;
 	}
+
+	return *this;
 }
 
-void Shader::set_int(const std::vector<int>& value, const std::string& name)
+Shader& Shader::set_int(const std::vector<int>& value, const std::string& name)
 {
 	if (value.size() > 4) {
 		throw std::runtime_error("too big value");
@@ -87,12 +89,14 @@ void Shader::set_int(const std::vector<int>& value, const std::string& name)
 		glUniform4i(uniform_loc, value[0], value[1], value[2], value[3]);
 		break;
 	}
+	return *this;
 }
 
-void Shader::set_matrix(const glm::mat4& matrix, const std::string& name)
+Shader& Shader::set_matrix(const glm::mat4& matrix, const std::string& name)
 {
     GLuint uniform_loc = glGetUniformLocation(m_id, name.c_str());
     glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(matrix));
+	return *this;
 }
 
 std::variant<Shader, std::string> Shader::create(const char *vertex_filename, const char *fragment_filename)

@@ -55,52 +55,52 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    auto shader_res = Shader::create("../shaders/vertex.glsl", "../shaders/fragment.glsl");
+    auto shader_res = Shader::create("../shaders/vert.glsl", "../shaders/frag.glsl");
     if (const auto *err_value = std::get_if<std::string>(&shader_res)) {
-        std::cerr << err_value << std::endl;
+        std::cerr << *err_value << std::endl;
         exit(1);
     }
 
     auto shader = std::get<Shader>(shader_res);
     PerlinNoise noise;
-    TerrainMesh mesh(noise, 1000, 1000);
+    TerrainMesh mesh(noise, 100, 100);
+	auto target_color = glm::vec3(0.0f, 0.51f, 0.0f);
+
 
     while (!glfwWindowShouldClose(window)) {
         process(window);
+
+		glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         float current = static_cast<float>(glfwGetTime());
         delta_time = current - last_frame;
         last_frame = current;
 
-        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		{
+				glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 model(1.f);
-        glm::mat4 view = camera.get_view_matrix();
-        glm::mat4 proj = glm::perspective(glm::radians(45.0f),  SCR_WIDTH / static_cast<float>(SCR_HEIGHT), 0.1f, 100.f);
+				glm::mat4 model(1.f);
+				glm::mat4 view = camera.get_view_matrix();
+				glm::mat4 proj = glm::perspective(glm::radians(45.0f),  SCR_WIDTH / static_cast<float>(SCR_HEIGHT), 0.1f, 100.f);
 
-        shader.use();
+				shader.use();
+				
+				shader.set_matrix(model, "model")
+					.set_matrix(view, "view")
+					.set_matrix(proj, "proj")
+					.set_float({0.0f, 0.5f, 0.11f}, "target_color");	
+				
+				glBindVertexArray(mesh.VAO());
+				glEnableVertexAttribArray(0);
+				
+		}
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        shader.set_matrix(view, "view");
-        shader.set_matrix(proj, "proj");
-        shader.set_matrix(model, "model");
-        shader.set_float({0.0f, 0.f, 1.f}, "col");
+		glDrawElements(GL_TRIANGLES, mesh.get_indicies_size(), GL_UNSIGNED_INT, 0);
+		glfwSwapBuffers(window);
+		glfwPollEvents();    
 
-        glBindVertexArray(mesh.VAO());
-        glEnableVertexAttribArray(0);
-        glDrawElements(GL_TRIANGLES, mesh.get_indicies_size(), GL_UNSIGNED_INT, 0);
-
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glEnable(GL_POLYGON_OFFSET_LINE);
-        glPolygonOffset(-1.0f, -1.0f); 
-        shader.set_float({1.0f, 0.34f, 0.48f}, "col"); 
-        
-        glDrawElements(GL_TRIANGLES, mesh.get_indicies_size(), GL_UNSIGNED_INT, 0);
-        glDisable(GL_POLYGON_OFFSET_LINE);
-
-        glfwSwapBuffers(window);
-        glfwPollEvents();    
     }
 }
 

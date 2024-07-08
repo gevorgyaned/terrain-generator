@@ -17,6 +17,8 @@ add_executable(TerrainGeneration
     external/glad/glad.c
 )
 
+find_package(glfw3 REQUIRED)
+
 target_include_directories(TerrainGeneration PRIVATE
     ${PROJECT_SOURCE_DIR}/include
     ${PROJECT_SOURCE_DIR}/external/glm

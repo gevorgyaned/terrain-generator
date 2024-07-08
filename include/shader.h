@@ -23,9 +23,9 @@ public:
 	GLuint get_id() const;
 	void use() const;
 
-	void set_float(const std::vector<float>& value, const std::string& name);
-	void set_int(const std::vector<int>& value, const std::string& name);
-    void set_matrix(const glm::mat4&, const std::string& name);
+	Shader& set_float(const std::vector<float>& value, const std::string& name);
+	Shader& set_int(const std::vector<int>& value, const std::string& name);
+    Shader& set_matrix(const glm::mat4&, const std::string& name);
 
 private:
     Shader(GLuint program_id) : m_id { program_id } { }
