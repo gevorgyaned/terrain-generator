@@ -43,65 +43,35 @@ std::variant<GLuint, std::string> Shader::create_program(GLuint frag_shader, GLu
 	return id;
 }
 
-Shader& Shader::set_float(const std::vector<float>& value, const std::string& name)
+Shader& Shader::set_float3(const glm::vec3& value, std::string_view name)
 {
-	if (value.size() > 4) {
-		throw std::runtime_error("too big value");
-	}
-
-	GLuint uniform_loc = glGetUniformLocation(m_id, name.c_str());
-	switch (value.size()) {
-	case 1:
-		glUniform1f(uniform_loc, value[0]);
-		break;
-	case 2:
-		glUniform2f(uniform_loc, value[0], value[1]);
-		break;
-	case 3:
-		glUniform3f(uniform_loc, value[0], value[1], value[2]);
-		break;
-	case 4:
-		glUniform4f(uniform_loc, value[0], value[1], value[2], value[3]);
-		break;
-	}
-
+    glUniform3f(glGetUniformLocation(m_id, name.data()), value[0], value[1], value[2]);
 	return *this;
 }
 
-Shader& Shader::set_int(const std::vector<int>& value, const std::string& name)
+Shader& Shader::set_int3(const glm::ivec3& value, std::string_view name)
 {
-	if (value.size() > 4) {
-		throw std::runtime_error("too big value");
-	}
-
-	GLuint uniform_loc = glGetUniformLocation(m_id, name.c_str());
-	switch (value.size()) {
-	case 1:
-		glUniform1i(uniform_loc, value[0]);
-		break;
-	case 2:
-		glUniform2i(uniform_loc, value[0], value[1]);
-		break;
-	case 3:
-		glUniform3i(uniform_loc, value[0], value[1], value[2]);
-		break;
-	case 4:
-		glUniform4i(uniform_loc, value[0], value[1], value[2], value[3]);
-		break;
-	}
+    glUniform3i(glGetUniformLocation(m_id, name.data()), value[0], value[1], value[2]);
 	return *this;
 }
 
-Shader& Shader::set_matrix(const glm::mat4& matrix, const std::string& name)
+Shader& Shader::set_matrix4(const glm::mat4& matrix, std::string_view name)
 {
-    GLuint uniform_loc = glGetUniformLocation(m_id, name.c_str());
+    GLuint uniform_loc = glGetUniformLocation(m_id, name.data());
     glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(matrix));
 	return *this;
 }
 
-std::variant<Shader, std::string> Shader::create(const char *vertex_filename, const char *fragment_filename)
+Shader& Shader::set_matrix3(const glm::mat3& matrix, std::string_view name)
 {
-    const std::string vertex_source = util::read_to_string(vertex_filename);
+    GLuint uniform_loc = glGetUniformLocation(m_id, name.data());
+    glUniformMatrix3fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(matrix));
+	return *this;
+}
+
+std::variant<Shader, std::string> Shader::create(std::string_view vertex_filename, const char *fragment_filename)
+{
+    const std::string vertex_source = util::read_to_string(vertex_filename.data());
     const std::string fragment_source = util::read_to_string(fragment_filename);
 
     auto vert_res = compile_shader(vertex_source, GL_VERTEX_SHADER);

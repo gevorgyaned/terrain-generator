@@ -8,14 +8,14 @@
 
 #include <iostream>
 #include <fstream>
-#include <vector>
 #include <variant>
+#include <string_view>
 
 #include "utility.h"
 
 class Shader {
 public:
-    static std::variant<Shader, std::string> create(const char *vertex_source, const char *fragment_shader);
+    static std::variant<Shader, std::string> create(std::string_view, const char *fragment_shader);
 
     static std::variant<Shader, std::string> create(const std::string& vertex_source, const std::string& fragment_shader);
 
@@ -23,9 +23,10 @@ public:
 	GLuint get_id() const;
 	void use() const;
 
-	Shader& set_float(const std::vector<float>& value, const std::string& name);
-	Shader& set_int(const std::vector<int>& value, const std::string& name);
-    Shader& set_matrix(const glm::mat4&, const std::string& name);
+	Shader& set_float3(const glm::vec3& value, std::string_view name);
+	Shader& set_int3(const glm::ivec3& value, std::string_view name);
+    Shader& set_matrix4(const glm::mat4&, std::string_view name);
+    Shader& set_matrix3(const glm::mat3&, std::string_view name);
 
 private:
     Shader(GLuint program_id) : m_id { program_id } { }

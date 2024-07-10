@@ -63,50 +63,47 @@ int main()
 
     auto shader = std::get<Shader>(shader_res);
     PerlinNoise noise;
-    TerrainMesh mesh(noise, 7, 7);
-	auto target_color = glm::vec3(0.0f, 0.51f, 0.0f);
+    TerrainMesh mesh(noise, 100, 100);
 
+    const glm::vec3 target_color(0.0f, 0.51f, 0.0f);
+    const glm::vec3 light_position(0.0f, 4.0f, 0.0f);
 
     while (!glfwWindowShouldClose(window)) {
-
         process(window);
-
-		glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         float current = static_cast<float>(glfwGetTime());
         delta_time = current - last_frame;
         last_frame = current;
 
-		{
-				glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
-				glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-				glm::mat4 model(1.f);
-				glm::mat4 view = camera.get_view_matrix();
-				glm::mat4 proj = glm::perspective(glm::radians(45.0f),  SCR_WIDTH / static_cast<float>(SCR_HEIGHT), 0.1f, 100.f);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-				shader.use();
+        // rendering 
+        glm::mat4 model(1.f);
+        glm::mat4 view = camera.get_view_matrix();
+        glm::mat4 proj = glm::perspective(glm::radians(45.0f),  SCR_WIDTH / static_cast<float>(SCR_HEIGHT), 0.1f, 100.f);
 
-                auto camera_pos = camera.get_position();
-				
-				shader.set_matrix(model, "model")
-					.set_matrix(view, "view")
-					.set_matrix(proj, "proj")
-					.set_float({0.0f, 0.5f, 0.11f}, "u_target_color")
-                    .set_float({camera_pos[0], camera_pos[1], camera_pos[2]}, "u_camera_location")
-                    .set_float({1.0f, 1.0f, 1.0f}, "u_light_color")
-                    .set_float({0.0f, 4.0f, 0.0f}, "u_light_location");
-                    
-				
-				glBindVertexArray(mesh.VAO());
-				glEnableVertexAttribArray(0);
+        shader.use();
+        
+        shader.set_matrix4(model, "model")
+            .set_matrix4(view, "view")
+            .set_matrix4(proj, "proj");
+    //        .set_float3(target_color, "u_target_color")
+    //        .set_float3(camera.get_position(), "u_camera_location")
+    //        .set_float3(light_position, "u_light_location")
+    //        .set_float3(glm::vec3(1.0f), "u_light_color");
+            
+        glBindVertexArray(mesh.VAO());
+        glEnableVertexAttribArray(0);
 
-                glBindVertexArray(mesh.surf_VAO());
-                glEnableVertexAttribArray(1);
-		}
+        //glBindVertexArray(mesh.surf_VAO());
+        //glEnableVertexAttribArray(1);
+        //
 
-		glDrawElements(GL_TRIANGLES, mesh.get_indicies_size(), GL_UNSIGNED_INT, 0);
+
+		glDrawArrays(GL_TRIANGLES, 0, mesh.get_vertices_size() / 3);
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
     }
@@ -131,7 +128,7 @@ void process(GLFWwindow *window) {
 }
 
 
-void mouse_callback(GLFWwindow *window, double xPos, double yPos)
+void mouse_callback(GLFWwindow *, double xPos, double yPos)
 {
     float xpos = static_cast<float>(xPos);
     float ypos = static_cast<float>(yPos);

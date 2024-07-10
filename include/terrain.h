@@ -11,8 +11,31 @@
 #include <shader.h>
 #include <cstdlib>
 #include <unistd.h>
+#include <tuple>
+#include <type_traits>
+
+template <typename T, typename = std::enable_if<std::is_floating_point_v<T>>>
+struct Vertex {
+    Vertex(T x, T y, T z) 
+    {  
+        this->x = x;
+        this->y = y;
+        this->z = z;
+    }
+
+    Vertex() = default;
+
+    std::tuple<T, T, T> get_values() const {
+        return { x, y, z };
+    }
+
+    T x;
+    T y;
+    T z;
+};
 
 class TerrainMesh {
+
 public:
     TerrainMesh(NoiseGenerator& gen, std::size_t width = 100, std::size_t height = 100, double scale = 40.0);
 
@@ -25,24 +48,20 @@ public:
 
 	// getters for buffers of vertex objects
     GLuint VAO() const {
-		return m_VAO;
-	}	
-
-    GLuint EBO() const {
-		return m_EBO;
+		return m_vertices_VAO;
 	}	
 
     GLuint VBO() const {
-		return m_VBO;
+		return m_vertices_VBO;
 	}	
 
 	// getters for buffers of surface normals objects
     GLuint surf_VAO() const {
-		return m_surf_VAO;
+		return m_normal_VAO;
 	}	
 
     GLuint surf_VBO() const {
-		return m_surf_VBO;
+		return m_normal_VBO;
 	}	
 
 private:
@@ -55,16 +74,16 @@ private:
     std::size_t m_height;
 
     double m_scale;
-    const double m_tile_distance = 0.10;
-    const double m_x_beg = 0.0;
-    const double m_z_beg = 0.0;
+    const float m_tile_distance = 0.10;
+    const float m_x_beg = 0.0;
+    const float m_z_beg = 0.0;
 
-    unsigned m_VBO, m_VAO, m_EBO;
-	GLuint m_surf_VAO, m_surf_VBO;
+    unsigned m_vertices_VBO, m_vertices_VAO;
+	GLuint m_normal_VAO, m_normal_VBO;
 
-    std::vector<unsigned> m_indicies;
-    std::vector<float> m_data;
+    std::vector<float> m_vertices;
     std::vector<float> m_normals;
 };
 
 #endif /* TERRAIN_H */
+

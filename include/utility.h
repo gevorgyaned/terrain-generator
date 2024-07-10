@@ -8,9 +8,9 @@
 namespace util {
 	std::string read_to_string(const char *filename); 
 
-    double interpolate(double a, double b, double t);
+    float interpolate(float a, float b, float t);
 
-    double fbm(NoiseGenerator& noise, float x, float y);
+    float fbm(NoiseGenerator& noise, float x, float y);
 };
 
 

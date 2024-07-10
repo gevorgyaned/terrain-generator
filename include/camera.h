@@ -24,8 +24,8 @@ public:
         , m_front { front }
         , m_yaw { yaw }
         , m_pitch { pitch }
-        , m_speed { 3.0f }
         , m_sensitivity { 0.1f }
+        , m_speed { 3.0f }
 	{  update_vectors(); }
 
     glm::mat4 get_view_matrix() const;

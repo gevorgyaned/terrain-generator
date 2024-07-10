@@ -1,8 +1,8 @@
 #include "utility.h"
 
-double util::interpolate(double a, double b, double t)
+float util::interpolate(float a, float b, float t)
 {
-    double f = t * t * t * (t * (t * 6 - 15) + 10);
+    float f = t * t * t * (t * (t * 6 - 15) + 10);
     return a + f * (b - a);
 }
 
@@ -21,10 +21,10 @@ std::string util::read_to_string(const char *filename)
     return result;
 }
 
-double util::fbm(NoiseGenerator& noise, float x, float y) {
-    double val = 0.0;
-    double frequency = 0.5;
-    double amplitude = 3.0;
+float util::fbm(NoiseGenerator& noise, float x, float y) {
+    float val = 0.0;
+    float frequency = 0.5;
+    float amplitude = 3.0;
 
     for (int i = 0; i < 6; ++i) {
         val += noise.get_value(x * frequency, y * frequency) * amplitude;
