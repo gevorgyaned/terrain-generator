@@ -30,6 +30,7 @@ public:
 
     glm::mat4 get_view_matrix() const;
 
+    glm::vec3 get_position() const;
     void process_mouse(float x, float y);
     void process_keyboard(MoveDirection dir, float delta_time);
 

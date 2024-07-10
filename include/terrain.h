@@ -55,13 +55,16 @@ private:
     std::size_t m_height;
 
     double m_scale;
+    const double m_tile_distance = 0.10;
+    const double m_x_beg = 0.0;
+    const double m_z_beg = 0.0;
 
     unsigned m_VBO, m_VAO, m_EBO;
 	GLuint m_surf_VAO, m_surf_VBO;
 
-    std::vector<float> m_vertices;
     std::vector<unsigned> m_indicies;
-	std::vector<float> m_surface_normals;
+    std::vector<float> m_data;
+    std::vector<float> m_normals;
 };
 
 #endif /* TERRAIN_H */

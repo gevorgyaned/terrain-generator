@@ -57,3 +57,5 @@ void Camera::update_vectors()
     m_right = glm::normalize(glm::cross(m_front, glm::vec3(0.0f, 1.0f, 0.0f)));
     m_up    = glm::normalize(glm::cross(m_right, m_front));   
 }
+
+glm::vec3 Camera::get_position() const { return m_camera_pos; }

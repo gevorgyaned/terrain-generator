@@ -1,7 +1,7 @@
 #include <terrain.h>
 
 int TerrainMesh::get_vertices_size() const {
-    return m_vertices.size() * sizeof(float);
+    return m_data.size() * sizeof(float);
 }
 
 int TerrainMesh::get_indicies_size() const {
@@ -13,9 +13,9 @@ TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t hei
 		, m_width { width + 1 }
 		, m_height { height + 1 }
 		, m_scale { scale }
-		, m_vertices ( m_width * m_height * 3 )
-		, m_indicies ( width * height  * 6 )
-		, m_surface_normals (m_indicies.size())
+        , m_indicies ( m_width * m_height * 3 )
+        , m_data ( m_indicies.size() * 2 )
+        , m_normals ( m_indicies.size() * 3 )
 {
 		generate_buffers();
 
@@ -28,8 +28,8 @@ TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t hei
 		glBindVertexArray(m_VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_VBO);
-		glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(float), 
-				m_vertices.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, m_data.size() * sizeof(float), 
+				m_data.data(), GL_STATIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indicies.size() * sizeof(unsigned),
@@ -44,8 +44,8 @@ TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t hei
 		glGenBuffers(1, &m_surf_VBO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, m_surf_VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_surface_normals.size(), 
-			m_surface_normals.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_normals.size(), 
+			m_normals.data(), GL_STATIC_DRAW);
 
 		glBindVertexArray(m_surf_VBO);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
@@ -54,29 +54,6 @@ TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t hei
 
 void TerrainMesh::generate_buffers() 
 {
-    unsigned vert_count = 0;
-    double distance = 0.10;
-    double z_beg = -0.90;
-
-    double big = 0.0;
-    double small = std::numeric_limits<float>::infinity();
-    for (int i = 0; i < m_width; ++i) {
-        double x_beg = -0.90;
-
-        for (int j = 0; j < m_height; ++j) {
-            double height = util::fbm(m_gen, static_cast<double>(i) / m_scale, static_cast<double>(j) / m_scale);
-           // double height = m_gen.get_value(static_cast<float>(i) / m_scale, static_cast<float>(j) / m_scale);
-            big = std::max(big, height);
-            small = std::min(small, height);
-            m_vertices[vert_count++] = x_beg;
-            m_vertices[vert_count++] = height;
-            m_vertices[vert_count++] = z_beg;
-            x_beg += distance;
-        }
-
-        z_beg += distance;
-    }
-
     unsigned ind_count = 0;
     for (int i = 0; i < m_width - 1; ++i) {
         for (int j = 0; j < m_height - 1; ++j) {
@@ -90,29 +67,47 @@ void TerrainMesh::generate_buffers()
         }
     }
 
-		printf("debuf %lu \n", m_indicies.size());
+    unsigned vert_count = 0;
+    double z_beg = m_z_beg;
+    for (int i = 0; i < m_width; ++i) {
+        double x_beg = m_x_beg;
+        for (int j = 0; j < m_height; ++j) {
+            double height = util::fbm(m_gen, static_cast<double>(i) / m_scale, static_cast<double>(j) / m_scale);
+            m_data[vert_count++] = x_beg;
+            m_data[vert_count++] = height;
+            m_data[vert_count++] = z_beg;
+            x_beg += m_tile_distance;
+        }
+
+        z_beg += m_tile_distance;
+    }
+
+
 	unsigned surf_norm_index = 0;
+    
 	for (int i = 0; i < m_indicies.size(); i += 3) {
 		glm::vec3 triangle_points[3];
-
-
 		for (int j = 0; j < 3; ++j) {
 			triangle_points[j] = glm::vec3(
-				m_vertices[m_indicies[i + j]],	
-				m_vertices[m_indicies[i + j] + 1],	
-				m_vertices[m_indicies[i + j] + 2]);	
-				printf("debug %d\n", j);
+				m_data[m_indicies[i + j]],	
+				m_data[m_indicies[i + j] + 1],	
+				m_data[m_indicies[i + j] + 2]);	
+				
 		}
 
 		glm::vec3 normal = glm::normalize(glm::cross(
 			triangle_points[1] - triangle_points[0], 
 			triangle_points[2] - triangle_points[1]));
 	
-
-		m_surface_normals[surf_norm_index++] = normal[0];	
-		m_surface_normals[surf_norm_index++] = normal[1];	
-		m_surface_normals[surf_norm_index++] = normal[2];	
-	printf("-----debug\n");
+		m_normals[surf_norm_index++] = normal[0];	
+		m_normals[surf_norm_index++] = normal[1];	
+		m_normals[surf_norm_index++] = normal[2];	
+		m_normals[surf_norm_index++] = normal[0];	
+		m_normals[surf_norm_index++] = normal[0];	
+		m_normals[surf_norm_index++] = normal[1];	
+		m_normals[surf_norm_index++] = normal[2];	
+		m_normals[surf_norm_index++] = normal[1];	
+		m_normals[surf_norm_index++] = normal[2];	
 	}
 }
 

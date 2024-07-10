@@ -86,21 +86,28 @@ int main()
 				glm::mat4 proj = glm::perspective(glm::radians(45.0f),  SCR_WIDTH / static_cast<float>(SCR_HEIGHT), 0.1f, 100.f);
 
 				shader.use();
+
+                auto camera_pos = camera.get_position();
 				
 				shader.set_matrix(model, "model")
 					.set_matrix(view, "view")
 					.set_matrix(proj, "proj")
-					.set_float({0.0f, 0.5f, 0.11f}, "target_color");	
+					.set_float({0.0f, 0.5f, 0.11f}, "u_target_color")
+                    .set_float({camera_pos[0], camera_pos[1], camera_pos[2]}, "u_camera_location")
+                    .set_float({1.0f, 1.0f, 1.0f}, "u_light_color")
+                    .set_float({0.0f, 4.0f, 0.0f}, "u_camera_location");
+                    
 				
 				glBindVertexArray(mesh.VAO());
 				glEnableVertexAttribArray(0);
-				
+
+                glBindVertexArray(mesh.surf_VAO());
+                glEnableVertexAttribArray(1);
 		}
 
 		glDrawElements(GL_TRIANGLES, mesh.get_indicies_size(), GL_UNSIGNED_INT, 0);
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
-
     }
 }
 
@@ -128,8 +135,7 @@ void mouse_callback(GLFWwindow *window, double xPos, double yPos)
     float xpos = static_cast<float>(xPos);
     float ypos = static_cast<float>(yPos);
 
-    if (first_mouse)
-    {
+    if (first_mouse) {
         lastX = xpos;
         lastY = ypos;
         first_mouse = false;
