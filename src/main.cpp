@@ -65,7 +65,7 @@ int main()
     PerlinNoise noise;
     TerrainMesh mesh(noise, 100, 100);
 
-    const glm::vec3 target_color(0.0f, 0.51f, 0.0f);
+    const glm::vec3 target_color(0.0f, 0.29f, 0.0f);
     const glm::vec3 light_position(0.0f, 4.0f, 0.0f);
 
     while (!glfwWindowShouldClose(window)) {
@@ -78,7 +78,7 @@ int main()
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // rendering 
         glm::mat4 model(1.f);
@@ -89,21 +89,16 @@ int main()
         
         shader.set_matrix4(model, "model")
             .set_matrix4(view, "view")
-            .set_matrix4(proj, "proj");
-    //        .set_float3(target_color, "u_target_color")
-    //        .set_float3(camera.get_position(), "u_camera_location")
-    //        .set_float3(light_position, "u_light_location")
-    //        .set_float3(glm::vec3(1.0f), "u_light_color");
-            
+            .set_matrix4(proj, "proj")
+            .set_float3(target_color, "u_target_color")
+            .set_float3(camera.get_position(), "u_camera_location")
+            .set_float3(light_position, "u_light_location")
+            .set_float3(glm::vec3(1.0f), "u_light_color");
+
         glBindVertexArray(mesh.VAO());
-        glEnableVertexAttribArray(0);
 
-        //glBindVertexArray(mesh.surf_VAO());
-        //glEnableVertexAttribArray(1);
-        //
+		glDrawArrays(GL_TRIANGLES, 0, mesh.get_vertices_size());
 
-
-		glDrawArrays(GL_TRIANGLES, 0, mesh.get_vertices_size() / 3);
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
     }

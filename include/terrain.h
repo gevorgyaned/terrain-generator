@@ -29,6 +29,13 @@ struct Vertex {
         return { x, y, z };
     }
 
+    template <typename U>
+    friend Vertex<U> operator-(const Vertex<U>& a, const Vertex<U>& b);
+
+    operator glm::vec3() {
+        return glm::vec3(x, y, z);
+    }
+
     T x;
     T y;
     T z;
@@ -56,10 +63,6 @@ public:
 	}	
 
 	// getters for buffers of surface normals objects
-    GLuint surf_VAO() const {
-		return m_normal_VAO;
-	}	
-
     GLuint surf_VBO() const {
 		return m_normal_VBO;
 	}	
@@ -81,8 +84,8 @@ private:
     unsigned m_vertices_VBO, m_vertices_VAO;
 	GLuint m_normal_VAO, m_normal_VBO;
 
-    std::vector<float> m_vertices;
-    std::vector<float> m_normals;
+    std::vector<Vertex<float>> m_vertices;
+    std::vector<Vertex<float>> m_normals;
 };
 
 #endif /* TERRAIN_H */
