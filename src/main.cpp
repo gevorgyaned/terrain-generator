@@ -63,11 +63,12 @@ int main()
 
     auto shader = std::get<Shader>(shader_res);
     PerlinNoise noise;
-    TerrainMesh mesh(noise, 100, 100);
+    TerrainMesh mesh(noise, 7, 7);
 	auto target_color = glm::vec3(0.0f, 0.51f, 0.0f);
 
 
     while (!glfwWindowShouldClose(window)) {
+
         process(window);
 
 		glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
@@ -95,7 +96,7 @@ int main()
 					.set_float({0.0f, 0.5f, 0.11f}, "u_target_color")
                     .set_float({camera_pos[0], camera_pos[1], camera_pos[2]}, "u_camera_location")
                     .set_float({1.0f, 1.0f, 1.0f}, "u_light_color")
-                    .set_float({0.0f, 4.0f, 0.0f}, "u_camera_location");
+                    .set_float({0.0f, 4.0f, 0.0f}, "u_light_location");
                     
 				
 				glBindVertexArray(mesh.VAO());

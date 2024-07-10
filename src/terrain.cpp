@@ -13,8 +13,8 @@ TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t hei
 		, m_width { width + 1 }
 		, m_height { height + 1 }
 		, m_scale { scale }
-        , m_indicies ( m_width * m_height * 3 )
-        , m_data ( m_indicies.size() * 2 )
+        , m_indicies ( width * height * 6 )
+        , m_data ( m_width * m_height * 3)
         , m_normals ( m_indicies.size() * 3 )
 {
 		generate_buffers();
@@ -47,7 +47,7 @@ TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t hei
 		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * m_normals.size(), 
 			m_normals.data(), GL_STATIC_DRAW);
 
-		glBindVertexArray(m_surf_VBO);
+		glBindVertexArray(m_surf_VAO);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
 		glBindVertexArray(0);
 }
@@ -55,8 +55,8 @@ TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t hei
 void TerrainMesh::generate_buffers() 
 {
     unsigned ind_count = 0;
-    for (int i = 0; i < m_width - 1; ++i) {
-        for (int j = 0; j < m_height - 1; ++j) {
+    for (std::size_t i = 0; i < m_width - 1; ++i) {
+        for (std::size_t j = 0; j < m_height - 1; ++j) {
             m_indicies[ind_count++] = i * m_width + j;
             m_indicies[ind_count++] = i * m_width + j + m_width;
             m_indicies[ind_count++] = i * m_width + j + m_width + 1;
@@ -69,9 +69,9 @@ void TerrainMesh::generate_buffers()
 
     unsigned vert_count = 0;
     double z_beg = m_z_beg;
-    for (int i = 0; i < m_width; ++i) {
+    for (std::size_t i = 0; i < m_width; ++i) {
         double x_beg = m_x_beg;
-        for (int j = 0; j < m_height; ++j) {
+        for (std::size_t j = 0; j < m_height; ++j) {
             double height = util::fbm(m_gen, static_cast<double>(i) / m_scale, static_cast<double>(j) / m_scale);
             m_data[vert_count++] = x_beg;
             m_data[vert_count++] = height;
@@ -82,12 +82,11 @@ void TerrainMesh::generate_buffers()
         z_beg += m_tile_distance;
     }
 
-
 	unsigned surf_norm_index = 0;
     
-	for (int i = 0; i < m_indicies.size(); i += 3) {
+	for (std::size_t i = 0; i < m_indicies.size(); i += 3) {
 		glm::vec3 triangle_points[3];
-		for (int j = 0; j < 3; ++j) {
+		for (std::size_t j = 0; j < 3; ++j) {
 			triangle_points[j] = glm::vec3(
 				m_data[m_indicies[i + j]],	
 				m_data[m_indicies[i + j] + 1],	
@@ -103,11 +102,12 @@ void TerrainMesh::generate_buffers()
 		m_normals[surf_norm_index++] = normal[1];	
 		m_normals[surf_norm_index++] = normal[2];	
 		m_normals[surf_norm_index++] = normal[0];	
+		m_normals[surf_norm_index++] = normal[1];	
+		m_normals[surf_norm_index++] = normal[2];	
 		m_normals[surf_norm_index++] = normal[0];	
 		m_normals[surf_norm_index++] = normal[1];	
 		m_normals[surf_norm_index++] = normal[2];	
-		m_normals[surf_norm_index++] = normal[1];	
-		m_normals[surf_norm_index++] = normal[2];	
 	}
+
 }
 
