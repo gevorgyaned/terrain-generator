@@ -65,7 +65,7 @@ int main()
     PerlinNoise noise;
     TerrainMesh mesh(noise, 100, 100);
 
-    const glm::vec3 target_color(0.0f, 0.29f, 0.0f);
+    const glm::vec3 target_color(0.0f, 0.39f, 0.1f);
     const glm::vec3 light_position(0.0f, 4.0f, 0.0f);
 
     while (!glfwWindowShouldClose(window)) {
@@ -78,6 +78,7 @@ int main()
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        // for rendering in polygon mode
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // rendering 
@@ -93,7 +94,7 @@ int main()
             .set_float3(target_color, "u_target_color")
             .set_float3(camera.get_position(), "u_camera_location")
             .set_float3(light_position, "u_light_location")
-            .set_float3(glm::vec3(1.0f), "u_light_color");
+            .set_float3(glm::vec3(1.0f, 1.0f, 1.0f), "u_light_color");
 
         glBindVertexArray(mesh.VAO());
 
@@ -102,6 +103,8 @@ int main()
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
     }
+
+    glDeleteProgram(shader.get_id());
 }
 
 void process(GLFWwindow *window) {

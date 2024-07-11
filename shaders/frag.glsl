@@ -16,10 +16,9 @@ void main()
     float n = max(dot(dir, o_normal), 0.0f);
     vec3 diffuse = n * u_light_color;
 
-	const float ambient_strength = 0.12f;
+	const float ambient_strength = 0.214f;
     vec3 ambient = ambient_strength * u_light_color;
 	
     vec3 color = (diffuse + ambient) * u_target_color;
     FragColor = vec4(color, 1.0f);
-
 }

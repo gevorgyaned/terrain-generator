@@ -16,7 +16,6 @@
 class Shader {
 public:
     static std::variant<Shader, std::string> create(std::string_view, const char *fragment_shader);
-
     static std::variant<Shader, std::string> create(const std::string& vertex_source, const std::string& fragment_shader);
 
 public:
