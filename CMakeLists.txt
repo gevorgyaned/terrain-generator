@@ -16,7 +16,7 @@ add_executable(TerrainGeneration
     src/utility.cpp
     src/vec2.cpp
     src/camera.cpp
-    #src/terrain_renderer.cpp
+    src/terrain_renderer.cpp
     src/chunk.cpp
     external/glad/glad.c
 )

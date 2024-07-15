@@ -10,10 +10,10 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
     generate_normals();
 
     // creating buffers
-	glGenVertexArrays(1, &mesh_VAO);
+	glGenVertexArrays(1, &m_VAO);
 	glGenBuffers(1, &mesh_VBO);
 
-	glBindVertexArray(mesh_VAO);
+	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_VBO);
 	glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex<float>), 
 			m_vertices.data(), GL_STATIC_DRAW);
@@ -42,7 +42,7 @@ Chunk& Chunk::operator=(Chunk&& rhs)
     m_begin_coords = std::exchange(rhs.m_begin_coords, glm::vec2());
     m_chunk_id = std::exchange(rhs.m_chunk_id, glm::dvec2());
 
-    mesh_VAO = std::exchange(rhs.mesh_VAO, 0);    
+    m_VAO = std::exchange(rhs.m_VAO, 0);    
     mesh_VBO = std::exchange(rhs.mesh_VBO, 0);
     normals_VBO = std::exchange(rhs.normals_VBO, 0);
 

@@ -24,9 +24,9 @@ public:
     Chunk(const Chunk& rhs) = default;
 
 public:
-    GLuint get_VAO() const { return mesh_VAO; }
-    GLuint get_VBO() const { return mesh_VBO; }
+    GLuint VAO() const { return m_VAO; }
 
+	size_t vertices_size() const { return m_vertices.size(); }
     bool is_visible(const glm::vec3& camera_coords, 
             const glm::vec3& euler_angles) const;
        
@@ -44,7 +44,7 @@ public:
     glm::vec2 m_begin_coords;
     glm::dvec2 m_chunk_id;
 
-    GLuint mesh_VAO, mesh_VBO;
+    GLuint m_VAO, mesh_VBO;
     GLuint normals_VBO;
 };
 

@@ -2,6 +2,7 @@
 #include <perlin.h> 
 #include <shader.h> 
 #include <camera.h> 
+#include <terrain_renderer.h>
 
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp> 
@@ -17,8 +18,6 @@ float lastY = static_cast<float>(SCR_HEIGHT) / 2.0f;
 
 void process(GLFWwindow *window);
 void mouse_callback(GLFWwindow *window, double xPos, double yPos);
-
-void render_terrain(const TerrainMesh& mesh);
 
 int main()
 {
@@ -55,8 +54,6 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    glfwSwapInterval(0);
-
     auto shader_res = Shader::create("../shaders/vert.glsl", "../shaders/frag.glsl");
     if (const auto *err_value = std::get_if<std::string>(&shader_res)) {
         std::cerr << *err_value << std::endl;
@@ -64,11 +61,15 @@ int main()
     }
 
     auto shader = std::get<Shader>(shader_res);
+
     PerlinNoise noise;
     TerrainMesh mesh(noise, 4, 4);
 
+	TerrainRenderer renderer(mesh);
+
     const glm::vec3 target_color(0.0f, 0.39f, 0.1f);
     const glm::vec3 light_position(0.0f, 4.0f, 0.0f);
+	glfwSwapInterval(0);
 
     int frames = 0;
     float last = glfwGetTime();
@@ -109,7 +110,7 @@ int main()
             .set_float3(light_position, "u_light_location")
             .set_float3(glm::vec3(1.0f, 1.0f, 1.0f), "u_light_color");
 
-        render_terrain(mesh);
+		renderer.draw(shader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
@@ -154,10 +155,3 @@ void mouse_callback(GLFWwindow *, double xPos, double yPos)
     camera.process_mouse(xoffset, yoffset);
 }
 
-void render_terrain(const TerrainMesh& mesh)
-{
-    for (size_t i = 0; i < mesh.m_chunks.size(); ++i) {
-        glBindVertexArray(mesh.m_chunks[i].mesh_VAO);  
-		glDrawArrays(GL_TRIANGLES, 0, mesh.m_chunks[i].m_vertices.size());
-    }    
-}
