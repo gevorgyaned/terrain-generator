@@ -1,12 +1,12 @@
 #ifndef TERRAIN_RENDERER_H
 #define TERRAIN_RENDERER_H
 
-#include "shader.h"
-#include "terrain.h"
+#include <shader.h>
+#include <terrain.h>
 
 class TerrainRenderer {
 public:
-    TerrainRenderer()
+    TerrainRenderer(const TerrainMesh& terrain_mesh, const Shader& program);
 
 public:
     void render_terrain() const;

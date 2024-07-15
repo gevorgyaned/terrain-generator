@@ -32,4 +32,11 @@ struct Vertex {
     T z;
 };
 
+template <typename T>
+Vertex<T> operator-(const Vertex<T>& a, const Vertex<T>& b)
+{
+    return Vertex(b.x - a.x, b.y - a.y, b.z - a.z);
+}
+
+
 #endif /* VERTEX_H */

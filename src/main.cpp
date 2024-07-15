@@ -1,24 +1,24 @@
-#include <terrain.h>
-#include <perlin.h>
-#include <shader.h>
-#include <camera.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include <terrain.h> 
+#include <perlin.h> 
+#include <shader.h> 
+#include <camera.h> 
+
+#include <glm/glm.hpp> 
+#include <glm/gtc/matrix_transform.hpp> 
 #include <glm/gtc/type_ptr.hpp>
 
-const int SCR_WIDTH = 800;
-const int SCR_HEIGHT = 800;
+const int SCR_WIDTH = 800; const int SCR_HEIGHT = 800;
 
-Camera camera;
-float delta_time = 0.0f;	
-float last_frame = 0.0f;
-bool first_mouse = true;
+Camera camera; float delta_time = 0.0f; float last_frame = 0.0f; bool 
+first_mouse = true;
 
 float lastX = static_cast<float>(SCR_WIDTH) / 2.0f;
 float lastY = static_cast<float>(SCR_HEIGHT) / 2.0f;
 
 void process(GLFWwindow *window);
 void mouse_callback(GLFWwindow *window, double xPos, double yPos);
+
+void render_terrain(const TerrainMesh& mesh);
 
 int main()
 {
@@ -55,6 +55,8 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
+    glfwSwapInterval(0);
+
     auto shader_res = Shader::create("../shaders/vert.glsl", "../shaders/frag.glsl");
     if (const auto *err_value = std::get_if<std::string>(&shader_res)) {
         std::cerr << *err_value << std::endl;
@@ -63,17 +65,28 @@ int main()
 
     auto shader = std::get<Shader>(shader_res);
     PerlinNoise noise;
-    TerrainMesh mesh(noise, 100, 100);
+    TerrainMesh mesh(noise, 4, 4);
 
     const glm::vec3 target_color(0.0f, 0.39f, 0.1f);
     const glm::vec3 light_position(0.0f, 4.0f, 0.0f);
 
+    int frames = 0;
+    float last = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {
         process(window);
 
         float current = static_cast<float>(glfwGetTime());
         delta_time = current - last_frame;
         last_frame = current;
+
+
+        frames++;
+        if (current - last >= 1.0f) {
+            printf("%lf ms\n", 1000.0 / double( frames) );
+            printf("%d fps\n",  frames );
+            frames = 0;
+            last += 1.0f;
+        }
 
         glClearColor(0.0f, 0.0f, 1.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -96,15 +109,11 @@ int main()
             .set_float3(light_position, "u_light_location")
             .set_float3(glm::vec3(1.0f, 1.0f, 1.0f), "u_light_color");
 
-        glBindVertexArray(mesh.VAO());
-
-		glDrawArrays(GL_TRIANGLES, 0, mesh.get_vertices_size());
+        render_terrain(mesh);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
     }
-
-    glDeleteProgram(shader.get_id());
 }
 
 void process(GLFWwindow *window) {
@@ -125,7 +134,6 @@ void process(GLFWwindow *window) {
         camera.process_keyboard(MoveDirection::Down, delta_time);
 }
 
-
 void mouse_callback(GLFWwindow *, double xPos, double yPos)
 {
     float xpos = static_cast<float>(xPos);
@@ -144,4 +152,12 @@ void mouse_callback(GLFWwindow *, double xPos, double yPos)
     lastY = ypos;
 
     camera.process_mouse(xoffset, yoffset);
+}
+
+void render_terrain(const TerrainMesh& mesh)
+{
+    for (size_t i = 0; i < mesh.m_chunks.size(); ++i) {
+        glBindVertexArray(mesh.m_chunks[i].mesh_VAO);  
+		glDrawArrays(GL_TRIANGLES, 0, mesh.m_chunks[i].m_vertices.size());
+    }    
 }
