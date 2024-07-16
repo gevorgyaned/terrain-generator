@@ -1,0 +1,3 @@
+/Users/picsartacademy/gr/terrain-generator/cmake-build-debug/CMakeFiles/TerrainGeneration.dir
+/Users/picsartacademy/gr/terrain-generator/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/picsartacademy/gr/terrain-generator/cmake-build-debug/CMakeFiles/rebuild_cache.dir
