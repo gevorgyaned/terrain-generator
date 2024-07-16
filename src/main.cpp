@@ -6,9 +6,9 @@
 
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp> 
-#include <glm/gtc/type_ptr.hpp>
 
-const int SCR_WIDTH = 800; const int SCR_HEIGHT = 800;
+constexpr int SCR_WIDTH = 800;
+constexpr int SCR_HEIGHT = 800;
 
 Camera camera; 
 
@@ -31,12 +31,12 @@ int main()
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif 
+#endif // __APPLE__
 
     atexit(glfwTerminate);
     
-    GLFWwindow *window = glfwCreateWindow(800, 600, "transform", NULL, NULL);
-    if (window == NULL) {
+    GLFWwindow *window = glfwCreateWindow(800, 600, "transform", nullptr, nullptr);
+    if (window == nullptr) {
         std::cerr << "glfwCreateWindow" << std::endl;
         exit(1);
     }
@@ -45,7 +45,7 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);    
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         exit(1);
     }   
@@ -68,24 +68,24 @@ int main()
     PerlinNoise noise;
     TerrainMesh mesh(noise, 4, 4);
 
-	TerrainRenderer renderer(mesh);
+	const TerrainRenderer renderer(mesh);
 
-    const glm::vec3 target_color(0.0f, 0.39f, 0.1f);
-    const glm::vec3 light_position(0.0f, 4.0f, 0.0f);
+    constexpr glm::vec3 target_color(0.0f, 0.39f, 0.1f);
+    constexpr glm::vec3 light_position(0.0f, 4.0f, 0.0f);
 	glfwSwapInterval(0);
 
     int frames = 0;
-    float last = glfwGetTime();
+    auto last = static_cast<float>(glfwGetTime());
     while (!glfwWindowShouldClose(window)) {
         process(window);
 
-        float current = static_cast<float>(glfwGetTime());
+        auto current = static_cast<float>(glfwGetTime());
         delta_time = current - last_frame;
         last_frame = current;
 
         frames++;
         if (current - last >= 1.0f) {
-            printf("%lf ms\n", 1000.0 / double( frames) );
+            printf("%lf ms\n", 1000.0 / static_cast<double>(frames));
             printf("%d fps\n",  frames );
             frames = 0;
             last += 1.0f;
@@ -95,7 +95,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // for rendering in polygon mode
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // rendering 
         glm::mat4 model(1.f);
@@ -137,10 +137,10 @@ void process(GLFWwindow *window) {
         camera.process_keyboard(MoveDirection::Down, delta_time);
 }
 
-void mouse_callback(GLFWwindow *, double xPos, double yPos)
+void mouse_callback(GLFWwindow *, const double xPos, const double yPos)
 {
-    float xpos = static_cast<float>(xPos);
-    float ypos = static_cast<float>(yPos);
+    const auto xpos = static_cast<float>(xPos);
+    const auto ypos = static_cast<float>(yPos);
 
     if (first_mouse) {
         lastX = xpos;
@@ -148,12 +148,11 @@ void mouse_callback(GLFWwindow *, double xPos, double yPos)
         first_mouse = false;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;
+    const float xoffset = xpos - lastX;
+    const float yoffset = lastY - ypos;
 
     lastX = xpos;
     lastY = ypos;
 
     camera.process_mouse(xoffset, yoffset);
 }
-

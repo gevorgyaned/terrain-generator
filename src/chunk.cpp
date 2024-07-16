@@ -1,5 +1,7 @@
 #include <chunk.h>
 
+#include <iostream>
+
 Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
         const glm::vec2& begin, float scale)
     : m_scale { scale }
@@ -15,7 +17,7 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
 
 	glBindVertexArray(m_VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, mesh_VBO);
-	glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(Vertex<float>), 
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex<float>) * m_vertices.size(),
 			m_vertices.data(), GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
@@ -33,8 +35,14 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
     glBindVertexArray(0);
 }
 
-Chunk& Chunk::operator=(Chunk&& rhs)
-{
+template <typename T>
+void print(const T& t) {
+    for (const auto& x : t) {
+        std::cout << x << '\n';
+    }
+}
+
+Chunk& Chunk::operator=(Chunk&& rhs) noexcept {
     m_vertices = std::exchange(rhs.m_vertices, std::vector<Vertex<float>> {});
     m_normals = std::exchange(rhs.m_normals, std::vector<Vertex<float>> {}); 
 
@@ -52,7 +60,7 @@ Chunk& Chunk::operator=(Chunk&& rhs)
 std::vector<Vertex<float>> Chunk::create_heightmap(NoiseGenerator& gen)
 {
     // calculation of the vertex quantity
-    std::vector<Vertex<float>> heightmap(pow(CHUNK_SIDE + 1, 2) * 2);
+    std::vector<Vertex<float>> heightmap(pow(CHUNK_SIDE + 1, 2));
     
     size_t vert_count = 0;
     float z_pos = m_begin_coords[1];
@@ -73,6 +81,9 @@ std::vector<Vertex<float>> Chunk::create_heightmap(NoiseGenerator& gen)
         z_pos += 0.1f;
     }
 
+    // std::cout << "cap - " << heightmap.capacity() << "\nvert_count - " << vert_count << std::endl;
+    // print(heightmap);
+
     return heightmap;
 }
 
@@ -80,16 +91,25 @@ void Chunk::generate_vertices(NoiseGenerator& gen)
 {
     const auto heightmap = create_heightmap(gen);
 
-    static const size_t add_values[] = { 0, CHUNK_SIDE, CHUNK_SIDE + 1, 0, CHUNK_SIDE + 1, 1};
-    size_t ind_count = 0;
+    std::cout << "size: " << heightmap.size() << std::endl;
+
+    static constexpr size_t add_values[] = { 0, CHUNK_SIDE + 1, CHUNK_SIDE + 2, 0, CHUNK_SIDE + 2, 1};
     for (size_t i = 0; i < CHUNK_SIDE; ++i) {
         for (size_t j = 0; j < CHUNK_SIDE; ++j) {
-            for (size_t k = 0; k < sizeof(add_values) / sizeof(size_t); ++k) {
-                const auto base_index = i * CHUNK_SIDE + j;
-                m_vertices[ind_count++] = heightmap[base_index + add_values[k]];
+            for (const auto add_value : add_values) {
+                const auto base_index = i * (CHUNK_SIDE + 1) + j;
+                m_vertices.push_back(heightmap[base_index + add_value]);
+                std::cout << "ind: " << base_index + add_value << std::endl;
             }
         }
     }
+    //std::cout << m_vertices.size() << ", " << ind_count << std::endl;
+
+    // exit(0);
+
+    //
+    // std::cout << "cap - " << m_vertices.capacity() << "\nvert_count - " << ind_count << std::endl;
+    // exit(0);// exit(0);
 }
 
 void Chunk::generate_normals()
@@ -97,8 +117,8 @@ void Chunk::generate_normals()
     size_t surf_norm_index = 0;
     for (size_t i = 0; i < m_vertices.size(); i += 3) {
         glm::vec3 normal = glm::normalize(glm::cross(
-            (glm::vec3)(m_vertices[i + 1] - m_vertices[i]), 
-            (glm::vec3)(m_vertices[i + 2] - m_vertices[i])));
+            static_cast<glm::vec3>(m_vertices[i + 1] - m_vertices[i]),
+            static_cast<glm::vec3>(m_vertices[i + 2] - m_vertices[i])));
 
         const Vertex vert(normal[0], normal[1], normal[2]);
 

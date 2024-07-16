@@ -17,7 +17,7 @@ void TerrainMesh::generate_chunks()
         for (std::size_t j = 0; j < m_height; ++j) {
             const auto pos = glm::dvec2(i, j);
             const auto offset = glm::vec2((float)i * d, (float)j * d);
-            m_chunks.push_back(Chunk( m_gen, pos, offset )); 
+            m_chunks.emplace_back(m_gen, pos, offset);
         }
     }
 }
