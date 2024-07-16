@@ -10,8 +10,11 @@
 
 const int SCR_WIDTH = 800; const int SCR_HEIGHT = 800;
 
-Camera camera; float delta_time = 0.0f; float last_frame = 0.0f; bool 
-first_mouse = true;
+Camera camera; 
+
+float delta_time = 0.0f; 
+float last_frame = 0.0f; 
+bool first_mouse = true;
 
 float lastX = static_cast<float>(SCR_WIDTH) / 2.0f;
 float lastY = static_cast<float>(SCR_HEIGHT) / 2.0f;
@@ -60,7 +63,7 @@ int main()
         exit(1);
     }
 
-    auto shader = std::get<Shader>(shader_res);
+    auto& shader = std::get<Shader>(shader_res);
 
     PerlinNoise noise;
     TerrainMesh mesh(noise, 4, 4);
@@ -80,7 +83,6 @@ int main()
         delta_time = current - last_frame;
         last_frame = current;
 
-
         frames++;
         if (current - last >= 1.0f) {
             printf("%lf ms\n", 1000.0 / double( frames) );
@@ -93,7 +95,7 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // for rendering in polygon mode
-        // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
         // rendering 
         glm::mat4 model(1.f);
