@@ -1,62 +1,62 @@
 [
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/main.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/main.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/main.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/main.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/main.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/main.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/main.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/terrain.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/terrain.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/terrain.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/terrain.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/terrain.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/terrain.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/terrain.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/perlin.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/perlin.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/perlin.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/perlin.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/perlin.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/perlin.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/perlin.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/shader.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/shader.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/shader.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/shader.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/shader.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/shader.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/shader.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/utility.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/utility.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/utility.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/utility.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/utility.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/utility.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/utility.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/vec2.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/vec2.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/vec2.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/vec2.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/vec2.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/vec2.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/vec2.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/camera.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/camera.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/camera.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/camera.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/camera.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/camera.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/camera.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/terrain_renderer.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/terrain_renderer.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/terrain_renderer.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/terrain_renderer.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/terrain_renderer.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/terrain_renderer.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/terrain_renderer.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/c++ -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -std=gnu++17 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/chunk.cpp.o -c /Users/picsartacademy/gr/terrain-generator/src/chunk.cpp",
-  "file": "/Users/picsartacademy/gr/terrain-generator/src/chunk.cpp",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/c++ -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -std=gnu++17 -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/src/chunk.cpp.o -c /home/eduardgev06/Graphics/terrain-generation/src/chunk.cpp",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/src/chunk.cpp",
   "output": "CMakeFiles/TerrainGeneration.dir/src/chunk.cpp.o"
 },
 {
-  "directory": "/Users/picsartacademy/gr/terrain-generator/cmake-build-debug",
-  "command": "/Library/Developer/CommandLineTools/usr/bin/cc -I/Users/picsartacademy/gr/terrain-generator/include -I/Users/picsartacademy/gr/terrain-generator/external/glad -isystem /usr/local/include -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -mmacosx-version-min=12.7 -fcolor-diagnostics -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/external/glad/glad.c.o -c /Users/picsartacademy/gr/terrain-generator/external/glad/glad.c",
-  "file": "/Users/picsartacademy/gr/terrain-generator/external/glad/glad.c",
+  "directory": "/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug",
+  "command": "/usr/bin/cc -I/home/eduardgev06/Graphics/terrain-generation/include -I/home/eduardgev06/Graphics/terrain-generation/external/glad -g -fdiagnostics-color=always -g -Wall -Wextra -o CMakeFiles/TerrainGeneration.dir/external/glad/glad.c.o -c /home/eduardgev06/Graphics/terrain-generation/external/glad/glad.c",
+  "file": "/home/eduardgev06/Graphics/terrain-generation/external/glad/glad.c",
   "output": "CMakeFiles/TerrainGeneration.dir/external/glad/glad.c.o"
 }
 ]
