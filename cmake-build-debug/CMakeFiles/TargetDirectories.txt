@@ -1,3 +1,0 @@
-/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug/CMakeFiles/TerrainGeneration.dir
-/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/eduardgev06/Graphics/terrain-generation/cmake-build-debug/CMakeFiles/rebuild_cache.dir
