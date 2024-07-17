@@ -10,7 +10,7 @@ namespace util {
 
     float interpolate(float a, float b, float t);
 
-    float fbm(NoiseGenerator& noise, float x, float y);
+    float fbm(NoiseGenerator& noise, float x, float y, float, float);
 };
 
 

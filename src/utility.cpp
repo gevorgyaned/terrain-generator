@@ -21,12 +21,10 @@ std::string util::read_to_string(const char *filename)
     return result;
 }
 
-float util::fbm(NoiseGenerator& noise, float x, float y) {
+float util::fbm(NoiseGenerator& noise, const float x, const float y, float amplitude, float frequency) {
     float val = 0.0;
-    float frequency = 0.5;
-    float amplitude = 3.0;
 
-    for (int i = 0; i < 6; ++i) {
+    for (int i = 0; i < 12; ++i) {
         val += noise.get_value(x * frequency, y * frequency) * amplitude;
         frequency *= 2.0;
         amplitude *= 0.5;

@@ -1,15 +1,13 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "../../external/glad/glad.h"
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
+#include "glad/glad.h"
 #include <glm/gtc/type_ptr.hpp>
 
-#include <iostream>
 #include <fstream>
 #include <variant>
 #include <string_view>
+#include <iostream>
 
 #include "utility.h"
 
@@ -19,7 +17,7 @@ public:
     static std::variant<Shader, std::string> create(const std::string& vertex_source, const std::string& fragment_shader);
 
 public:
-	GLuint get_id() const;
+	[[nodiscard]] GLuint get_id() const;
 	void use() const;
 
 	Shader& set_float3(const glm::vec3& value, std::string_view name);

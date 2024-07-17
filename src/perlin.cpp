@@ -1,4 +1,4 @@
-#include <perlin.h>
+#include "perlin.h"
 
 void PerlinNoise::fill_permutations()
 {
@@ -16,27 +16,26 @@ void PerlinNoise::fill_permutations()
             m_permutations.end());
 }
 
-double PerlinNoise::get_value(double x, double y)
+float PerlinNoise::get_value(float x, float y)
 {
-    const uint32_t ix = std::floor(x);
-    const uint32_t iy = std::floor(y);
+    const int ix = std::floor(x);
+    const int iy = std::floor(y);
 
-    const float dx = x - ix;
-    const float dy = y - iy;
+    const float dx = x - static_cast<float>(ix);
+    const float dy = y - static_cast<float>(iy);
     
     const vec2 top_left  = get_gradient_vec(ix, iy);
     const vec2 top_right = get_gradient_vec(ix + 1, iy);
     const vec2 bot_left  = get_gradient_vec(ix, iy + 1);
     const vec2 bot_right = get_gradient_vec(ix + 1, iy + 1);
 
-    double d1, d2;
-    d1 = top_left.dot(vec2(dx, dy));
-    d2 = top_right.dot(vec2(dx - 1.0, dy)); 
-    double r1 = util::interpolate(d1, d2, dx); 
+    float d1 = top_left.dot(vec2(dx, dy));
+    float d2 = top_right.dot(vec2(dx - 1.0f, dy));
+    const float r1 = util::interpolate(d1, d2, dx);
 
-    d1 = bot_left.dot(vec2(dx, dy - 1.0)); 
-    d2 = bot_right.dot(vec2(dx - 1.0, dy - 1.0)); 
-    double r2 = util::interpolate(d1, d2, dx);
+    d1 = bot_left.dot(vec2(dx, dy - 1.0f));
+    d2 = bot_right.dot(vec2(dx - 1.0f, dy - 1.0f));
+    const float r2 = util::interpolate(d1, d2, dx);
 
     return util::interpolate(r1, r2, dy);
 }

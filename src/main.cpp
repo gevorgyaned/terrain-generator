@@ -1,11 +1,16 @@
-#include <terrain.h> 
-#include <perlin.h> 
-#include <shader.h> 
-#include <camera.h> 
-#include <terrain_renderer.h>
+#include "terrain.h" 
+#include "perlin.h" 
+#include "shader.h" 
+#include "camera.h" 
+#include "terrain_renderer.h"
 
+#include <GLFW/glfw3.h>
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp> 
+
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#include "imgui.h"
 
 constexpr int SCR_WIDTH = 800;
 constexpr int SCR_HEIGHT = 800;
@@ -22,6 +27,16 @@ float lastY = static_cast<float>(SCR_HEIGHT) / 2.0f;
 void process(GLFWwindow *window);
 void mouse_callback(GLFWwindow *window, double xPos, double yPos);
 
+float amplitude = 2.0f;
+float frequency = 0.5f;
+float scale = 40.f;
+
+float *current = &amplitude;
+
+bool is_changed = false;
+
+GLenum cursor_mode = GLFW_CURSOR_DISABLED;
+
 int main()
 {
     glfwInit();
@@ -33,8 +48,6 @@ int main()
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif // __APPLE__
 
-    atexit(glfwTerminate);
-    
     GLFWwindow *window = glfwCreateWindow(800, 600, "transform", nullptr, nullptr);
     if (window == nullptr) {
         std::cerr << "glfwCreateWindow" << std::endl;
@@ -43,12 +56,20 @@ int main()
 
     glfwMakeContextCurrent(window);
     glfwSetCursorPosCallback(window, mouse_callback);    
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         exit(1);
     }   
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+    ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330");
 
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -65,21 +86,36 @@ int main()
 
     auto& shader = std::get<Shader>(shader_res);
 
-    PerlinNoise noise;
-    TerrainMesh mesh(noise, 4, 4);
-
-	const TerrainRenderer renderer(mesh);
-
-    constexpr glm::vec3 target_color(0.0f, 0.39f, 0.1f);
+    constexpr glm::vec3 target_color(0.039f, 0.5f, 0.3f);
     constexpr glm::vec3 light_position(0.0f, 4.0f, 0.0f);
-	glfwSwapInterval(0);
+	glfwSwapInterval(1);
+    glfwSetInputMode(window, GLFW_CURSOR, cursor_mode);
 
     int frames = 0;
     auto last = static_cast<float>(glfwGetTime());
+
+    PerlinNoise noise;
+    TerrainMesh mesh(noise, 3, 2, scale, amplitude, frequency);
+
     while (!glfwWindowShouldClose(window)) {
+        glfwPollEvents();
         process(window);
 
-        auto current = static_cast<float>(glfwGetTime());
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+
+        ImGui::Begin("Configuration");
+        ImGui::SliderFloat("amplitude: ", &amplitude, 0.1f, 10.0f);
+        ImGui::SliderFloat("frequency: ", &frequency, 0.1f, 10.0f);
+        ImGui::SliderFloat("scale: ", &scale, 0.1f, 120.f);
+        ImGui::End();
+
+        ImGui::Render();
+        
+        mesh.reset(scale, amplitude, frequency);
+
+        const auto current = static_cast<float>(glfwGetTime());
         delta_time = current - last_frame;
         last_frame = current;
 
@@ -103,20 +139,32 @@ int main()
         glm::mat4 proj = glm::perspective(glm::radians(45.0f),  SCR_WIDTH / static_cast<float>(SCR_HEIGHT), 0.1f, 100.f);
 
         shader.use();
-        
+
         shader.set_matrix4(model, "model")
             .set_matrix4(view, "view")
             .set_matrix4(proj, "proj")
             .set_float3(target_color, "u_target_color")
             .set_float3(camera.get_position(), "u_camera_location")
-            .set_float3(light_position, "u_light_location")
+            .set_float3(camera.get_position(), "u_light_location")
             .set_float3(glm::vec3(1.0f, 1.0f, 1.0f), "u_light_color");
 
-		renderer.draw(shader);
+        for (int i = 0; i < mesh.m_chunks.size(); ++i) {
+            glBindVertexArray(mesh.m_chunks[i].VAO);
+            glDrawElements(GL_TRIANGLES, mesh.m_chunks[i].indicies.size(), GL_UNSIGNED_INT, 0);
+        }
+
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
     }
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+
+    glfwDestroyWindow(window);
+    glfwTerminate();
 }
 
 void process(GLFWwindow *window) {
@@ -135,6 +183,20 @@ void process(GLFWwindow *window) {
         camera.process_keyboard(MoveDirection::Up, delta_time);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         camera.process_keyboard(MoveDirection::Down, delta_time);
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) 
+        current = &amplitude;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) 
+        current = &frequency;
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) 
+        current = &scale; 
+    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
+        is_changed = true;
+        *current += 0.1;
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
+        is_changed = true;
+        *current -= 0.1;
+    }
 }
 
 void mouse_callback(GLFWwindow *, const double xPos, const double yPos)

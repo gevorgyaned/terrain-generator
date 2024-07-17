@@ -2,48 +2,33 @@
 #define VERTEX_H
 
 #include <tuple>
+#include <ostream>
 
 #include <glm/vec3.hpp>
 
-template <typename T>
 struct Vertex {
-    Vertex(T x, T y, T z) 
-    {  
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
+    Vertex(const glm::vec3& pos, const glm::vec3& norm)
+        : position{pos}
+        , normal{norm}
+    {  }
 
     Vertex() = default;
 
-    std::tuple<T, T, T> get_values() const {
-        return { x, y, z };
-    }
+    Vertex& operator=(const Vertex& other) = default;
 
-    template <typename U>
-    friend Vertex<U> operator-(const Vertex<U>& a, const Vertex<U>& b);
+    [[nodiscard]] inline std::tuple<float, float, float> get_position() const;
 
-    template <typename U>
-    friend std::ostream& operator<<(std::ostream& stream, const Vertex<U>& vert);
 
-    explicit operator glm::vec3() {
-        return glm::vec3(x, y, z);
-    }
+    friend std::ostream& operator<<(std::ostream& stream, Vertex& vert);
 
-    T x;
-    T y;
-    T z;
+    glm::vec3 position;
+    glm::vec3 normal;
 };
 
-template <typename T>
-Vertex<T> operator-(const Vertex<T>& a, const Vertex<T>& b)
+
+inline std::tuple<float, float, float> Vertex::get_position() const
 {
-    return Vertex(b.x - a.x, b.y - a.y, b.z - a.z);
-}
-template <typename U>
-std::ostream& operator<<(std::ostream& stream, const Vertex<U>& vert) {
-    const auto [x, y, z] = vert.get_values();
-    return stream << x << ", " << y << ", " << z;
+    return { position[0], position[1], position[2] };
 }
 
 #endif /* VERTEX_H */

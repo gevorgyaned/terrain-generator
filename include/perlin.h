@@ -5,19 +5,19 @@
 #include <algorithm>
 #include <vector>
 
-#include "noise_gen.h"
 #include "vec2.h"
 #include "utility.h"
+#include "noise_gen.h"
 
 class PerlinNoise : public NoiseGenerator {
 public:
-    explicit PerlinNoise(std::size_t size = 256)
+    explicit PerlinNoise(const std::size_t size = 256)
         : m_size(size * 2)
         , m_permutations(m_size)
         , m_rand_grad(m_size)
     { fill_permutations(); }
 
-    double get_value(double x, double y) override;
+    float get_value(float x, float y) override;
 
 private:
     void fill_permutations();

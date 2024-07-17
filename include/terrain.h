@@ -1,44 +1,43 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-#include <glad.h>
+#include "vertex.h"
+#include "chunk.h"
+#include "perlin.h"
+#include "shader.h"
+#include "noise_gen.h"
+
+#include "glad/glad.h"
 #include <GLFW/glfw3.h>
+
 #include <iostream>
 #include <vector>
-
-#include <noise_gen.h>
-#include <perlin.h>
-#include <shader.h>
 #include <cstdlib>
 #include <unistd.h>
-#include <vertex.h>
-#include <chunk.h>
+
 
 class TerrainMesh {
+public:
+    explicit TerrainMesh(NoiseGenerator& gen,
+        std::size_t width, std::size_t height, float sc, float ampl, float fr);
+
+    TerrainMesh& operator=(const TerrainMesh&) = default;
 
 public:
-    TerrainMesh(NoiseGenerator& gen, 
-        std::size_t width = 100, std::size_t height = 100, double scale = 40.0);
+	[[nodiscard]] const std::vector<Chunk>& get_chunks() const { return m_chunks; }
 
-public:
-    std::size_t get_chunks_width() const;
-    std::size_t get_chunks_height() const;
-
-	const std::vector<Chunk>& get_chunks() const { return m_chunks; }
+    void reset(float scale, float amplitude, float frequency);
 
 private:
-    void generate_chunks();
+    void generate_chunks(NoiseGenerator& gen);
     
 public:
-    NoiseGenerator& m_gen;
-
     std::size_t m_width;
     std::size_t m_height;
 
-    double m_scale;
-    const float m_tile_distance = 0.10;
-    const float m_x_beg = 0.0;
-    const float m_z_beg = 0.0;
+    float scale{};
+    float amplitude{};
+    float freq{};
 
     std::vector<Chunk> m_chunks;
 };

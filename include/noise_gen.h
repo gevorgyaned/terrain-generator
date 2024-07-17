@@ -5,7 +5,7 @@ class NoiseGenerator {
 public:
     virtual ~NoiseGenerator() = default;
 
-    virtual double get_value(double x, double y) = 0;
+    virtual float get_value(float x, float y) = 0;
 };
 
 #endif /* NOISE_GEN_H */

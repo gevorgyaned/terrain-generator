@@ -1,14 +1,16 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include <vertex.h>
-#include <noise_gen.h>
-#include <utility.h>
+#include "vertex.h"
+#include "noise_gen.h"
+#include "utility.h"
 
-#include <glad.h>
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
+#include <glad/glad.h>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+
+#include <cstddef>
+#include <iostream>
 #include <vector>
 #include <utility>
 
@@ -18,34 +20,45 @@ constexpr std::size_t CHUNK_SIZE = CHUNK_SIDE * CHUNK_SIDE;
 class Chunk {
 public:
     Chunk(NoiseGenerator& gen, const glm::dvec2& coords, 
-        const glm::vec2& begin = glm::vec2(0.0f), float scale = 40.0f);
+        const glm::vec2& begin, float scale, float ampl, float freq);
     
     Chunk& operator=(Chunk&& rhs) noexcept;
-    Chunk(const Chunk& rhs) = default;
+    Chunk(Chunk&& other) = default;
+
+    Chunk(const Chunk& rhs) = delete;
+    Chunk& operator=(const Chunk& rhs) = delete;
+
+    ~Chunk();
 
 public:
-    [[nodiscard]] GLuint VAO() const { return m_VAO; }
+    [[nodiscard]] GLuint get_VAO() const { return VAO; }
 
-	[[nodiscard]] size_t vertices_size() const { return m_vertices.size(); }
+	[[nodiscard]] size_t vertices_size() const { return vertices.size(); }
     [[nodiscard]] bool is_visible(const glm::vec3& camera_coords,
             const glm::vec3& euler_angles) const;
        
+    void regenerate(float scale, float amplitude, float frequency);
+
 private:
-    void generate_vertices(NoiseGenerator& gen);
-    void generate_normals();
-    std::vector<Vertex<float>> create_heightmap(NoiseGenerator& gen);
+    std::vector<Vertex> generate_vertices();
+    std::vector<unsigned> generate_indicies();
+    void set_normals();
+
 
 public:
-    std::vector<Vertex<float>> m_vertices;
-    std::vector<Vertex<float>> m_normals { CHUNK_SIZE * 6 };
-    
-    float m_scale = 40.0f;
+    NoiseGenerator& m_gen;
+
+    float m_scale;
+    float amplitude;
+    float frequency;
 
     glm::vec2 m_begin_coords;
     glm::dvec2 m_chunk_id;
 
-    GLuint m_VAO{}, mesh_VBO{};
-    GLuint normals_VBO{};
+    GLuint VAO, EBO, VBO;
+
+    std::vector<unsigned> indicies;
+    std::vector<Vertex> vertices;
 };
 
 #endif /* CHUNK_H */

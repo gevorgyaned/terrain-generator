@@ -3,15 +3,15 @@
 
 struct vec2 {
 public:
-    vec2(double _x = 0.0, double _y = 0.0) 
+    vec2(float _x = 0.0, float _y = 0.0)
         : x { _x }
         , y { _y }
     { }
 
-    double dot(const vec2& oth) const;
+    float dot(const vec2& oth) const;
 
-    double x;
-    double y;
+    float x;
+    float y;
 };
 
 #endif /* VEC2_H */

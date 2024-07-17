@@ -1,4 +1,4 @@
-#include "../include/shader.h"
+#include "shader.h"
 
 std::variant<GLuint, std::string> Shader::compile_shader(const std::string& contents, GLenum shader_type)
 {
@@ -74,20 +74,20 @@ std::variant<Shader, std::string> Shader::create(std::string_view vertex_filenam
     const std::string vertex_source = util::read_to_string(vertex_filename.data());
     const std::string fragment_source = util::read_to_string(fragment_filename);
 
-    auto vert_res = compile_shader(vertex_source, GL_VERTEX_SHADER);
+    const auto vert_res = compile_shader(vertex_source, GL_VERTEX_SHADER);
     if (const auto *err_value = std::get_if<std::string>(&vert_res)) {
         return *err_value + "vertex shader compile error";  
     }
 
-    auto frag_res = compile_shader(fragment_source, GL_FRAGMENT_SHADER);
+    const auto frag_res = compile_shader(fragment_source, GL_FRAGMENT_SHADER);
     if (const auto *err_value = std::get_if<std::string>(&frag_res)) {
         return *err_value + "fragment shader compile error";
     }
 
-    auto vertex_shader = std::get<GLuint>(vert_res);
-    auto fragment_shader = std::get<GLuint>(frag_res);
+    const auto vertex_shader = std::get<GLuint>(vert_res);
+    const auto fragment_shader = std::get<GLuint>(frag_res);
 
-    auto program = create_program(vertex_shader, fragment_shader);
+    const auto program = create_program(vertex_shader, fragment_shader);
     if (const auto *err_value = std::get_if<std::string>(&program)) {
         return *err_value + "linking error";
     }
