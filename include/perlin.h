@@ -11,7 +11,7 @@
 
 class PerlinNoise : public NoiseGenerator {
 public:
-    PerlinNoise(std::size_t size = 256) 
+    explicit PerlinNoise(std::size_t size = 256)
         : m_size(size * 2)
         , m_permutations(m_size)
         , m_rand_grad(m_size)
@@ -21,8 +21,8 @@ public:
 
 private:
     void fill_permutations();
-    vec2 get_gradient_vec(int x, int y) const;
-    std::size_t get_size() const;
+    [[nodiscard]] vec2 get_gradient_vec(int x, int y) const;
+    [[nodiscard]] std::size_t get_size() const;
 
 private:
     const std::size_t m_size;

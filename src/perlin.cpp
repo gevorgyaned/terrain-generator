@@ -16,21 +16,21 @@ void PerlinNoise::fill_permutations()
             m_permutations.end());
 }
 
-double PerlinNoise::get_value(double x, double y) 
+double PerlinNoise::get_value(double x, double y)
 {
-    uint32_t ix = std::floor(x);
-    uint32_t iy = std::floor(y);
+    const uint32_t ix = std::floor(x);
+    const uint32_t iy = std::floor(y);
 
-    double dx = x - ix;
-    double dy = y - iy;
+    const float dx = x - ix;
+    const float dy = y - iy;
     
-    vec2 top_left  = get_gradient_vec(ix, iy);
-    vec2 top_right = get_gradient_vec(ix + 1, iy);
-    vec2 bot_left  = get_gradient_vec(ix, iy + 1);
-    vec2 bot_right = get_gradient_vec(ix + 1, iy + 1);
+    const vec2 top_left  = get_gradient_vec(ix, iy);
+    const vec2 top_right = get_gradient_vec(ix + 1, iy);
+    const vec2 bot_left  = get_gradient_vec(ix, iy + 1);
+    const vec2 bot_right = get_gradient_vec(ix + 1, iy + 1);
 
     double d1, d2;
-    d1 = top_left.dot(vec2(dx, dy)); 
+    d1 = top_left.dot(vec2(dx, dy));
     d2 = top_right.dot(vec2(dx - 1.0, dy)); 
     double r1 = util::interpolate(d1, d2, dx); 
 

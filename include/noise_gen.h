@@ -3,6 +3,8 @@
 
 class NoiseGenerator {
 public:
+    virtual ~NoiseGenerator() = default;
+
     virtual double get_value(double x, double y) = 0;
 };
 

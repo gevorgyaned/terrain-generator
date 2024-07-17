@@ -20,14 +20,14 @@ public:
     Chunk(NoiseGenerator& gen, const glm::dvec2& coords, 
         const glm::vec2& begin = glm::vec2(0.0f), float scale = 40.0f);
     
-    Chunk& operator=(Chunk&& rhs);
+    Chunk& operator=(Chunk&& rhs) noexcept;
     Chunk(const Chunk& rhs) = default;
 
 public:
-    GLuint get_VAO() const { return mesh_VAO; }
-    GLuint get_VBO() const { return mesh_VBO; }
+    [[nodiscard]] GLuint VAO() const { return m_VAO; }
 
-    bool is_visible(const glm::vec3& camera_coords, 
+	[[nodiscard]] size_t vertices_size() const { return m_vertices.size(); }
+    [[nodiscard]] bool is_visible(const glm::vec3& camera_coords,
             const glm::vec3& euler_angles) const;
        
 private:
@@ -36,7 +36,7 @@ private:
     std::vector<Vertex<float>> create_heightmap(NoiseGenerator& gen);
 
 public:
-    std::vector<Vertex<float>> m_vertices { CHUNK_SIZE * 6 }; 
+    std::vector<Vertex<float>> m_vertices;
     std::vector<Vertex<float>> m_normals { CHUNK_SIZE * 6 };
     
     float m_scale = 40.0f;
@@ -44,8 +44,8 @@ public:
     glm::vec2 m_begin_coords;
     glm::dvec2 m_chunk_id;
 
-    GLuint mesh_VAO, mesh_VBO;
-    GLuint normals_VBO;
+    GLuint m_VAO{}, mesh_VBO{};
+    GLuint normals_VBO{};
 };
 
 #endif /* CHUNK_H */

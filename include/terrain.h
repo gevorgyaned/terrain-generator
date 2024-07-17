@@ -24,8 +24,10 @@ public:
     std::size_t get_chunks_width() const;
     std::size_t get_chunks_height() const;
 
+	const std::vector<Chunk>& get_chunks() const { return m_chunks; }
+
 private:
-    void generate_chunks() ;
+    void generate_chunks();
     
 public:
     NoiseGenerator& m_gen;

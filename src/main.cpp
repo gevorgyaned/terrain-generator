@@ -2,23 +2,25 @@
 #include <perlin.h> 
 #include <shader.h> 
 #include <camera.h> 
+#include <terrain_renderer.h>
 
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp> 
-#include <glm/gtc/type_ptr.hpp>
 
-const int SCR_WIDTH = 800; const int SCR_HEIGHT = 800;
+constexpr int SCR_WIDTH = 800;
+constexpr int SCR_HEIGHT = 800;
 
-Camera camera; float delta_time = 0.0f; float last_frame = 0.0f; bool 
-first_mouse = true;
+Camera camera; 
+
+float delta_time = 0.0f; 
+float last_frame = 0.0f; 
+bool first_mouse = true;
 
 float lastX = static_cast<float>(SCR_WIDTH) / 2.0f;
 float lastY = static_cast<float>(SCR_HEIGHT) / 2.0f;
 
 void process(GLFWwindow *window);
 void mouse_callback(GLFWwindow *window, double xPos, double yPos);
-
-void render_terrain(const TerrainMesh& mesh);
 
 int main()
 {
@@ -29,12 +31,12 @@ int main()
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif 
+#endif // __APPLE__
 
     atexit(glfwTerminate);
     
-    GLFWwindow *window = glfwCreateWindow(800, 600, "transform", NULL, NULL);
-    if (window == NULL) {
+    GLFWwindow *window = glfwCreateWindow(800, 600, "transform", nullptr, nullptr);
+    if (window == nullptr) {
         std::cerr << "glfwCreateWindow" << std::endl;
         exit(1);
     }
@@ -43,7 +45,7 @@ int main()
     glfwSetCursorPosCallback(window, mouse_callback);    
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader(reinterpret_cast<GLADloadproc>(glfwGetProcAddress))) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         exit(1);
     }   
@@ -55,34 +57,35 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    glfwSwapInterval(0);
-
     auto shader_res = Shader::create("../shaders/vert.glsl", "../shaders/frag.glsl");
     if (const auto *err_value = std::get_if<std::string>(&shader_res)) {
         std::cerr << *err_value << std::endl;
         exit(1);
     }
 
-    auto shader = std::get<Shader>(shader_res);
+    auto& shader = std::get<Shader>(shader_res);
+
     PerlinNoise noise;
     TerrainMesh mesh(noise, 4, 4);
 
-    const glm::vec3 target_color(0.0f, 0.39f, 0.1f);
-    const glm::vec3 light_position(0.0f, 4.0f, 0.0f);
+	const TerrainRenderer renderer(mesh);
+
+    constexpr glm::vec3 target_color(0.0f, 0.39f, 0.1f);
+    constexpr glm::vec3 light_position(0.0f, 4.0f, 0.0f);
+	glfwSwapInterval(0);
 
     int frames = 0;
-    float last = glfwGetTime();
+    auto last = static_cast<float>(glfwGetTime());
     while (!glfwWindowShouldClose(window)) {
         process(window);
 
-        float current = static_cast<float>(glfwGetTime());
+        auto current = static_cast<float>(glfwGetTime());
         delta_time = current - last_frame;
         last_frame = current;
 
-
         frames++;
         if (current - last >= 1.0f) {
-            printf("%lf ms\n", 1000.0 / double( frames) );
+            printf("%lf ms\n", 1000.0 / static_cast<double>(frames));
             printf("%d fps\n",  frames );
             frames = 0;
             last += 1.0f;
@@ -109,7 +112,7 @@ int main()
             .set_float3(light_position, "u_light_location")
             .set_float3(glm::vec3(1.0f, 1.0f, 1.0f), "u_light_color");
 
-        render_terrain(mesh);
+		renderer.draw(shader);
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
@@ -134,10 +137,10 @@ void process(GLFWwindow *window) {
         camera.process_keyboard(MoveDirection::Down, delta_time);
 }
 
-void mouse_callback(GLFWwindow *, double xPos, double yPos)
+void mouse_callback(GLFWwindow *, const double xPos, const double yPos)
 {
-    float xpos = static_cast<float>(xPos);
-    float ypos = static_cast<float>(yPos);
+    const auto xpos = static_cast<float>(xPos);
+    const auto ypos = static_cast<float>(yPos);
 
     if (first_mouse) {
         lastX = xpos;
@@ -145,19 +148,11 @@ void mouse_callback(GLFWwindow *, double xPos, double yPos)
         first_mouse = false;
     }
 
-    float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos;
+    const float xoffset = xpos - lastX;
+    const float yoffset = lastY - ypos;
 
     lastX = xpos;
     lastY = ypos;
 
     camera.process_mouse(xoffset, yoffset);
-}
-
-void render_terrain(const TerrainMesh& mesh)
-{
-    for (size_t i = 0; i < mesh.m_chunks.size(); ++i) {
-        glBindVertexArray(mesh.m_chunks[i].mesh_VAO);  
-		glDrawArrays(GL_TRIANGLES, 0, mesh.m_chunks[i].m_vertices.size());
-    }    
 }

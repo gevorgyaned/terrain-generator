@@ -1,4 +1,5 @@
 build
 objs
 .cache
-
+.idea
+cmake-build-debug

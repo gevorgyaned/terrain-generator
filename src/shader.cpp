@@ -4,7 +4,7 @@ std::variant<GLuint, std::string> Shader::compile_shader(const std::string& cont
 {
 	GLuint shader = glCreateShader(shader_type);
     const char *ptr = contents.c_str();
-	glShaderSource(shader, 1, &ptr, NULL);
+	glShaderSource(shader, 1, &ptr, nullptr);
 	glCompileShader(shader);
 
     std::string log_info(512, '\0');
@@ -12,7 +12,7 @@ std::variant<GLuint, std::string> Shader::compile_shader(const std::string& cont
 
 	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
 	if (success == GL_FALSE) {
-		glGetShaderInfoLog(shader, 512, NULL, const_cast<GLchar *>(log_info.c_str()));
+		glGetShaderInfoLog(shader, 512, nullptr, const_cast<GLchar *>(log_info.c_str()));
 		std::cout << log_info << std::endl;
         return log_info;
 	}
@@ -32,7 +32,7 @@ std::variant<GLuint, std::string> Shader::create_program(GLuint frag_shader, GLu
 
 	glGetProgramiv(id, GL_LINK_STATUS, &success);
 	if (success == GL_FALSE) {
-		glGetProgramInfoLog(id, 512, NULL, const_cast<GLchar *>(log_info.c_str()));
+		glGetProgramInfoLog(id, 512, nullptr, const_cast<GLchar *>(log_info.c_str()));
 		std::cout << log_info << std::endl;
         return log_info;
 	}
@@ -57,14 +57,14 @@ Shader& Shader::set_int3(const glm::ivec3& value, std::string_view name)
 
 Shader& Shader::set_matrix4(const glm::mat4& matrix, std::string_view name)
 {
-    GLuint uniform_loc = glGetUniformLocation(m_id, name.data());
+    const GLint uniform_loc = glGetUniformLocation(m_id, name.data());
     glUniformMatrix4fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(matrix));
 	return *this;
 }
 
-Shader& Shader::set_matrix3(const glm::mat3& matrix, std::string_view name)
+Shader& Shader::set_matrix3(const glm::mat3& matrix, const std::string_view name)
 {
-    GLuint uniform_loc = glGetUniformLocation(m_id, name.data());
+    const GLint uniform_loc = glGetUniformLocation(m_id, name.data());
     glUniformMatrix3fv(uniform_loc, 1, GL_FALSE, glm::value_ptr(matrix));
 	return *this;
 }
