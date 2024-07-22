@@ -4,14 +4,14 @@
 
 Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
              const glm::vec2& begin, float scale, float ampl, float freq)
-    : m_gen{ gen }
-    , m_scale { scale }
-    , amplitude { ampl }
-    , frequency { freq }
-    , m_begin_coords { begin }
-    , m_chunk_id { coords }
-    , indicies { generate_indicies() }
-    , vertices { generate_vertices() }
+    : m_gen{gen}
+    , m_scale{scale}
+    , m_amplitude{ampl}
+    , m_frequency{freq}
+    , m_begin_coords{begin}
+    , m_chunk_id{coords}
+    , indicies{generate_indicies()}
+    , vertices{generate_vertices()}
 {
     set_normals();
 
@@ -36,13 +36,6 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
     glEnableVertexAttribArray(1);
 }
 
-Chunk::~Chunk()
-{
-    glDeleteBuffers(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &EBO);
-}
-
 Chunk& Chunk::operator=(Chunk&& rhs) noexcept {
     vertices = std::exchange(rhs.vertices, std::vector<Vertex> {});
 
@@ -59,11 +52,11 @@ Chunk& Chunk::operator=(Chunk&& rhs) noexcept {
 
 void Chunk::regenerate(float scale, float amplitude, float frequency)
 {
-    this->m_scale = scale;
-    this->amplitude = amplitude;
-    this->frequency = frequency;
+    m_scale = scale;
+    m_amplitude = amplitude;
+    m_frequency = frequency;
 
-    vertices = std::move(generate_vertices());
+    vertices = generate_vertices();
     set_normals();
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
@@ -72,9 +65,9 @@ void Chunk::regenerate(float scale, float amplitude, float frequency)
 
 void Chunk::set_normals()
 {
-    std::vector<int> normal_count(vertices.size(), 0);
+    std::vector<int> normal_count(vertices.size());
 
-    for (int i = 0; i < indicies.size(); i += 3) {
+    for (size_t i = 0; i < indicies.size(); i += 3) {
         Vertex& a = vertices[indicies[i]];
         Vertex& b = vertices[indicies[i + 1]];
         Vertex& c = vertices[indicies[i + 2]];
@@ -92,7 +85,7 @@ void Chunk::set_normals()
         normal_count[indicies[i + 2]]++;
     }
 
-    for (int i = 0; i < normal_count.size(); ++i) {
+    for (size_t i = 0; i < normal_count.size(); ++i) {
         vertices[i].normal = glm::normalize(vertices[i].normal 
                 / static_cast<float>(normal_count[i]));
     }
@@ -113,8 +106,9 @@ std::vector<Vertex> Chunk::generate_vertices()
 
             heightmap[idx++].position = glm::vec3(
                 x_pos, 
-                util::fbm(m_gen, mesh_x, mesh_y, amplitude, frequency),
+                util::fbm(m_gen, mesh_x, mesh_y, m_amplitude, m_frequency),
                 z_pos);
+
             x_pos += 0.1f;
         }
 
@@ -129,8 +123,8 @@ std::vector<unsigned> Chunk::generate_indicies()
     std::vector<unsigned> indicies(CHUNK_SIZE * 6);
 
     int idx = 0;
-    for (int i = 0; i < CHUNK_SIDE; ++i) {
-        for (int j = 0; j < CHUNK_SIDE; ++j) {
+    for (size_t i = 0; i < CHUNK_SIDE; ++i) {
+        for (size_t j = 0; j < CHUNK_SIDE; ++j) {
             auto base_index = i * (CHUNK_SIDE + 1) + j;
             indicies[idx++] = base_index;
             indicies[idx++] = base_index + CHUNK_SIDE + 1;

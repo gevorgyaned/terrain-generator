@@ -10,9 +10,9 @@ void TerrainRenderer::draw(Shader& shader) const
 
 	const auto& chunks = m_terrain_mesh.get_chunks();
 
-	for (int i = 0; i < chunks.size(); ++i) {
-		glBindVertexArray(chunks[i].get_VAO());
-		glDrawElements(GL_TRIANGLES, chunks[i].indicies.size(), GL_UNSIGNED_INT, 0);
+	for (const auto& chunk : chunks) {
+		glBindVertexArray(chunk.get_VAO());
+		glDrawElements(GL_TRIANGLES, chunk.indicies_size(), GL_UNSIGNED_INT, 0);
 	}
 }
 

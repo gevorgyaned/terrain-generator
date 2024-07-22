@@ -87,15 +87,16 @@ int main()
     auto& shader = std::get<Shader>(shader_res);
 
     constexpr glm::vec3 target_color(0.039f, 0.5f, 0.3f);
-    constexpr glm::vec3 light_position(0.0f, 4.0f, 0.0f);
 	glfwSwapInterval(1);
     glfwSetInputMode(window, GLFW_CURSOR, cursor_mode);
 
-    int frames = 0;
+    int fps = 0;
     auto last = static_cast<float>(glfwGetTime());
 
     PerlinNoise noise;
     TerrainMesh mesh(noise, 3, 2, scale, amplitude, frequency);
+
+    TerrainRenderer render(mesh);
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -119,11 +120,11 @@ int main()
         delta_time = current - last_frame;
         last_frame = current;
 
-        frames++;
+        fps++;
         if (current - last >= 1.0f) {
-            printf("%lf ms\n", 1000.0 / static_cast<double>(frames));
-            printf("%d fps\n",  frames );
-            frames = 0;
+            printf("%lf ms\n", 1000.0 / static_cast<double>(fps));
+            printf("%d fps\n",  fps );
+            fps = 0;
             last += 1.0f;
         }
 
@@ -147,11 +148,8 @@ int main()
             .set_float3(camera.get_position(), "u_camera_location")
             .set_float3(camera.get_position(), "u_light_location")
             .set_float3(glm::vec3(1.0f, 1.0f, 1.0f), "u_light_color");
-
-        for (int i = 0; i < mesh.m_chunks.size(); ++i) {
-            glBindVertexArray(mesh.m_chunks[i].VAO);
-            glDrawElements(GL_TRIANGLES, mesh.m_chunks[i].indicies.size(), GL_UNSIGNED_INT, 0);
-        }
+        
+        render.draw(shader);
 
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 

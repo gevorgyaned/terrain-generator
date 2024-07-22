@@ -19,7 +19,7 @@
 class TerrainMesh {
 public:
     explicit TerrainMesh(NoiseGenerator& gen,
-        std::size_t width, std::size_t height, float sc, float ampl, float fr);
+        size_t width, size_t height, float sc, float ampl, float fr);
 
     TerrainMesh& operator=(const TerrainMesh&) = default;
 
@@ -28,16 +28,14 @@ public:
 
     void reset(float scale, float amplitude, float frequency);
 
+
 private:
-    void generate_chunks(NoiseGenerator& gen);
+    std::vector<Chunk> generate_chunks(NoiseGenerator& gen, size_t width, size_t height);
     
 public:
-    std::size_t m_width;
-    std::size_t m_height;
-
-    float scale{};
-    float amplitude{};
-    float freq{};
+    float m_scale;
+    float m_amplitude;
+    float m_freq;
 
     std::vector<Chunk> m_chunks;
 };

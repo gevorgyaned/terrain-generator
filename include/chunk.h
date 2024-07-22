@@ -4,6 +4,7 @@
 #include "vertex.h"
 #include "noise_gen.h"
 #include "utility.h"
+#include "perlin.h"
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -28,12 +29,10 @@ public:
     Chunk(const Chunk& rhs) = delete;
     Chunk& operator=(const Chunk& rhs) = delete;
 
-    ~Chunk();
-
 public:
     [[nodiscard]] GLuint get_VAO() const { return VAO; }
 
-	[[nodiscard]] size_t vertices_size() const { return vertices.size(); }
+	[[nodiscard]] size_t indicies_size() const { return indicies.size(); }
     [[nodiscard]] bool is_visible(const glm::vec3& camera_coords,
             const glm::vec3& euler_angles) const;
        
@@ -44,13 +43,12 @@ private:
     std::vector<unsigned> generate_indicies();
     void set_normals();
 
-
 public:
     NoiseGenerator& m_gen;
 
     float m_scale;
-    float amplitude;
-    float frequency;
+    float m_amplitude;
+    float m_frequency;
 
     glm::vec2 m_begin_coords;
     glm::dvec2 m_chunk_id;
