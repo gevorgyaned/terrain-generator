@@ -8,10 +8,6 @@
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp> 
 
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-#include "imgui.h"
-
 constexpr int SCR_WIDTH = 800;
 constexpr int SCR_HEIGHT = 800;
 
@@ -32,10 +28,6 @@ float frequency = 0.5f;
 float scale = 40.f;
 
 float *current = &amplitude;
-
-bool is_changed = false;
-
-GLenum cursor_mode = GLFW_CURSOR_DISABLED;
 
 int main()
 {
@@ -62,15 +54,6 @@ int main()
         exit(1);
     }   
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-
-    ImGui::StyleColorsDark();
-
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
@@ -88,7 +71,7 @@ int main()
 
     constexpr glm::vec3 target_color(0.039f, 0.5f, 0.3f);
 	glfwSwapInterval(1);
-    glfwSetInputMode(window, GLFW_CURSOR, cursor_mode);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     int fps = 0;
     auto last = static_cast<float>(glfwGetTime());
@@ -101,18 +84,6 @@ int main()
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
         process(window);
-
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        ImGui::Begin("Configuration");
-        ImGui::SliderFloat("amplitude: ", &amplitude, 0.1f, 10.0f);
-        ImGui::SliderFloat("frequency: ", &frequency, 0.1f, 10.0f);
-        ImGui::SliderFloat("scale: ", &scale, 0.1f, 120.f);
-        ImGui::End();
-
-        ImGui::Render();
         
         mesh.reset(scale, amplitude, frequency);
 
@@ -151,15 +122,9 @@ int main()
         
         render.draw(shader);
 
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-
 		glfwSwapBuffers(window);
 		glfwPollEvents();    
     }
-
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 
     glfwDestroyWindow(window);
     glfwTerminate();
@@ -187,14 +152,10 @@ void process(GLFWwindow *window) {
         current = &frequency;
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) 
         current = &scale; 
-    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS) {
-        is_changed = true;
+    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
         *current += 0.1;
-    }
-    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS) {
-        is_changed = true;
+    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
         *current -= 0.1;
-    }
 }
 
 void mouse_callback(GLFWwindow *, const double xPos, const double yPos)
