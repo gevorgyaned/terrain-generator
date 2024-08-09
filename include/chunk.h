@@ -18,10 +18,12 @@
 constexpr std::size_t CHUNK_SIDE = 16;
 constexpr std::size_t CHUNK_SIZE = CHUNK_SIDE * CHUNK_SIDE;
 
+struct TerrainParams;
+
 class Chunk {
 public:
     Chunk(NoiseGenerator& gen, const glm::dvec2& coords, 
-        const glm::vec2& begin, float scale, float ampl, float freq);
+        const glm::vec2& begin, const TerrainParams& params);
     
     Chunk& operator=(Chunk&& rhs) noexcept;
     Chunk(Chunk&& other) = default;
@@ -36,7 +38,7 @@ public:
     [[nodiscard]] bool is_visible(const glm::vec3& camera_coords,
             const glm::vec3& euler_angles) const;
        
-    void regenerate(float scale, float amplitude, float frequency);
+    void regenerate(const TerrainParams& params);
 
 private:
     std::vector<Vertex> generate_vertices();
@@ -46,9 +48,7 @@ private:
 public:
     NoiseGenerator& m_gen;
 
-    float m_scale;
-    float m_amplitude;
-    float m_frequency;
+    TerrainParams m_params;
 
     glm::vec2 m_begin_coords;
     glm::dvec2 m_chunk_id;

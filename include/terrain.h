@@ -6,6 +6,7 @@
 #include "perlin.h"
 #include "shader.h"
 #include "noise_gen.h"
+#include "utility.h"
 
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
@@ -19,24 +20,21 @@
 class TerrainMesh {
 public:
     explicit TerrainMesh(NoiseGenerator& gen,
-        size_t width, size_t height, float sc, float ampl, float fr);
+        size_t width, size_t height, const TerrainParams& params);
 
     TerrainMesh& operator=(const TerrainMesh&) = default;
 
 public:
 	[[nodiscard]] const std::vector<Chunk>& get_chunks() const { return m_chunks; }
 
-    void reset(float scale, float amplitude, float frequency);
+    void reset(const TerrainParams& params);
 
 
 private:
     std::vector<Chunk> generate_chunks(NoiseGenerator& gen, size_t width, size_t height);
     
 public:
-    float m_scale;
-    float m_amplitude;
-    float m_freq;
-
+    TerrainParams m_params;
     std::vector<Chunk> m_chunks;
 };
 

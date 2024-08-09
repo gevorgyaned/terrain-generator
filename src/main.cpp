@@ -20,14 +20,10 @@ bool first_mouse = true;
 float lastX = static_cast<float>(SCR_WIDTH) / 2.0f;
 float lastY = static_cast<float>(SCR_HEIGHT) / 2.0f;
 
-void process(GLFWwindow *window);
+void process(GLFWwindow *window, TerrainParams& params);
 void mouse_callback(GLFWwindow *window, double xPos, double yPos);
 
-float amplitude = 2.0f;
-float frequency = 0.5f;
-float scale = 40.f;
-
-float *current = &amplitude;
+Param current = Param::Amplitude;
 
 int main()
 {
@@ -76,16 +72,18 @@ int main()
     int fps = 0;
     auto last = static_cast<float>(glfwGetTime());
 
+    TerrainParams params;
+
     PerlinNoise noise;
-    TerrainMesh mesh(noise, 3, 2, scale, amplitude, frequency);
+    TerrainMesh mesh(noise, 16, 16, params);
 
     TerrainRenderer render(mesh);
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
-        process(window);
+        process(window, params);
         
-        mesh.reset(scale, amplitude, frequency);
+        mesh.reset(params);
 
         const auto current = static_cast<float>(glfwGetTime());
         delta_time = current - last_frame;
@@ -130,7 +128,30 @@ int main()
     glfwTerminate();
 }
 
-void process(GLFWwindow *window) {
+void change_params(TerrainParams& params, GLenum option)
+{
+    int s = option == GLFW_KEY_KP_ADD ? 1 : -1;
+    switch (current) {
+        case Param::Amplitude:
+            params.amplitude += s * (0.01);
+            break;
+        case Param::Frequency:
+            params.frequency += s * (0.01f);
+            break;
+        case Param::Scale:
+            params.scale += s * (0.1f);
+            break;
+        case Param::Stride:
+            params.stride += s * (0.01f);
+            break;
+        case Param::Elevage:
+            params.elevage += s * (0.02f);
+            break;
+    };
+}
+
+
+void process(GLFWwindow *window, TerrainParams& params) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
         glfwSetWindowShouldClose(window, true); 
 
@@ -147,15 +168,19 @@ void process(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         camera.process_keyboard(MoveDirection::Down, delta_time);
     if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) 
-        current = &amplitude;
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS) 
-        current = &frequency;
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS) 
-        current = &scale; 
+        current = Param::Amplitude;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        current = Param::Frequency;
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        current = Param::Scale;
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+        current = Param::Stride;
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+        current = Param::Elevage;
     if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
-        *current += 0.1;
+        change_params(params, GLFW_KEY_KP_ADD);
     if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
-        *current -= 0.1;
+        change_params(params, GLFW_KEY_KP_SUBTRACT);
 }
 
 void mouse_callback(GLFWwindow *, const double xPos, const double yPos)

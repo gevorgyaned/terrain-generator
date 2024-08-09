@@ -21,13 +21,15 @@ std::string util::read_to_string(const char *filename)
     return result;
 }
 
-float util::fbm(NoiseGenerator& noise, const float x, const float y, float amplitude, float frequency) {
+float util::fbm(NoiseGenerator& noise, float x, float y, const TerrainParams& params) {
     float val = 0.0;
+    float frequency = params.frequency;
+    float amplitude = params.amplitude;
 
     for (int i = 0; i < 12; ++i) {
-        val += noise.get_value(x * frequency, y * frequency) * amplitude;
-        frequency *= 2.0;
-        amplitude *= 0.5;
+        val += noise.get_value((x / params.scale) * frequency, (y / params.scale) * frequency) * amplitude;
+        frequency *= params.stride;
+        amplitude *= params.elevage;
     }
 
     return val;
