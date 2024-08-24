@@ -6,7 +6,7 @@ void PerlinNoise::fill_permutations()
     std::mt19937 g(rd());
     std::uniform_real_distribution<> dis(0.0, 100.0);
 
-    for (int i = 0; i < m_size; ++i) {
+    for (size_t i = 0; i < m_size; ++i) {
         m_rand_grad[i] = vec2(sin(dis(g)), cos(dis(g)));
         m_permutations[i] = i + 1;
     }

@@ -8,10 +8,12 @@ TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t hei
 std::vector<Chunk> TerrainMesh::generate_chunks(NoiseGenerator& m_gen, size_t width, size_t height) 
 {
     std::vector<Chunk> chunks;
+    chunks.reserve(width * height);
+
     const float d = 0.1f * static_cast<float>(CHUNK_SIDE);
 
-    for (std::size_t i = 0; i < width; ++i) {
-        for (std::size_t j = 0; j < height; ++j) {
+    for (size_t i = 0; i < width; ++i) {
+        for (size_t j = 0; j < height; ++j) {
             const auto pos = glm::dvec2(i, j);
             const auto offset = glm::vec2((float)i * d, (float)j * d);
             chunks.emplace_back(m_gen, pos, offset, m_params);
@@ -29,6 +31,5 @@ void TerrainMesh::reset(const TerrainParams& params)
         for (auto& chunk : m_chunks) {
             chunk.regenerate(m_params);
         }
-
     }
 }

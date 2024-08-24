@@ -1,6 +1,7 @@
 #include "chunk.h"
 
 #include <glm/gtx/string_cast.hpp>
+#include <iterator>
 
 
 Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
@@ -36,13 +37,15 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
 }
 
 Chunk& Chunk::operator=(Chunk&& rhs) noexcept {
-    vertices = std::exchange(rhs.vertices, std::vector<Vertex> {});
+    if (this != &rhs) {
+        vertices = std::exchange(rhs.vertices, std::vector<Vertex> {});
 
-    m_params = rhs.m_params;
+        m_params = rhs.m_params;
 
-    VAO = rhs.VAO;
-    EBO = rhs.EBO;
-    VBO = rhs.VBO;
+        VAO = rhs.VAO;
+        EBO = rhs.EBO;
+        VBO = rhs.VBO;
+    }
 
     return *this;
 }
@@ -100,9 +103,7 @@ std::vector<Vertex> Chunk::generate_vertices()
             const auto mesh_y = static_cast<float>(i + CHUNK_SIDE * m_chunk_id[1]);
 
             heightmap[idx++].position = glm::vec3(
-                x_pos, 
-                util::fbm(m_gen, mesh_x, mesh_y, m_params),
-                z_pos);
+                    x_pos, util::fbm(m_gen, mesh_x, mesh_y, m_params), z_pos);
 
             x_pos += 0.1f;
         }
@@ -115,19 +116,23 @@ std::vector<Vertex> Chunk::generate_vertices()
 
 std::vector<unsigned> Chunk::generate_indicies()
 {
-    std::vector<unsigned> indicies(CHUNK_SIZE * 6);
+    std::vector<unsigned> indicies;
+    indicies.reserve(CHUNK_SIZE * 6);
 
-    int idx = 0;
+    static constexpr size_t offsets[] = {
+        0, CHUNK_SIDE + 1, CHUNK_SIDE + 2, 0, CHUNK_SIDE + 2, 1
+    };
+
     for (size_t i = 0; i < CHUNK_SIDE; ++i) {
         for (size_t j = 0; j < CHUNK_SIDE; ++j) {
-            auto base_index = i * (CHUNK_SIDE + 1) + j;
-            indicies[idx++] = base_index;
-            indicies[idx++] = base_index + CHUNK_SIDE + 1;
-            indicies[idx++] = base_index + CHUNK_SIDE + 2;
+            auto base = i * (CHUNK_SIDE + 1) + j;
 
-            indicies[idx++] = base_index;
-            indicies[idx++] = base_index + CHUNK_SIDE + 2;
-            indicies[idx++] = base_index + 1;
+            std::transform(
+                std::begin(offsets), 
+                std::end(offsets), 
+                std::back_inserter(indicies),
+                [base](auto offset) { return offset + base; }
+            );
         }
     }
 

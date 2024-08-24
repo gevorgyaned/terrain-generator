@@ -14,6 +14,7 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <algorithm>
 
 constexpr std::size_t CHUNK_SIDE = 16;
 constexpr std::size_t CHUNK_SIZE = CHUNK_SIDE * CHUNK_SIDE;

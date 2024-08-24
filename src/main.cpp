@@ -75,7 +75,7 @@ int main()
     TerrainParams params;
 
     PerlinNoise noise;
-    TerrainMesh mesh(noise, 16, 16, params);
+    TerrainMesh mesh(noise, 4, 4, params);
 
     TerrainRenderer render(mesh);
 
