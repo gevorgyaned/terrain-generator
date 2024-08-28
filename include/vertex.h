@@ -2,29 +2,22 @@
 #define VERTEX_H
 
 #include <tuple>
-#include <ostream>
 
 #include <glm/vec3.hpp>
 
 struct Vertex {
-    Vertex(const glm::vec3& pos, const glm::vec3& norm)
+    Vertex(glm::vec3 const &pos = glm::vec3{}, glm::vec3 const &norm = glm::vec3{})
         : position{pos}
         , normal{norm}
+        , normals_count{0}
     {  }
 
-    Vertex() = default;
-
-    Vertex& operator=(const Vertex& other) = default;
-
-    [[nodiscard]] inline std::tuple<float, float, float> get_position() const;
-
-
-    friend std::ostream& operator<<(std::ostream& stream, Vertex& vert);
+    inline std::tuple<float, float, float> get_position() const;
 
     glm::vec3 position;
     glm::vec3 normal;
+    int normals_count;
 };
-
 
 inline std::tuple<float, float, float> Vertex::get_position() const
 {

@@ -7,15 +7,9 @@ std::variant<GLuint, std::string> Shader::compile_shader(const std::string& cont
 	glShaderSource(shader, 1, &ptr, nullptr);
 	glCompileShader(shader);
 
-    std::string log_info(512, '\0');
-	GLint success;
-
-	glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-	if (success == GL_FALSE) {
-		glGetShaderInfoLog(shader, 512, nullptr, const_cast<GLchar *>(log_info.c_str()));
-		std::cout << log_info << std::endl;
-        return log_info;
-	}
+    if (auto err_msg = check_compile_errors(shader)) {
+        return *err_msg;
+    }
 
 	return shader;
 }
@@ -27,15 +21,9 @@ std::variant<GLuint, std::string> Shader::create_program(GLuint frag_shader, GLu
 	glAttachShader(id, vert_shader);
 	glLinkProgram(id);
 
-    std::string log_info(512, '\0');
-	GLint success;
-
-	glGetProgramiv(id, GL_LINK_STATUS, &success);
-	if (success == GL_FALSE) {
-		glGetProgramInfoLog(id, 512, nullptr, const_cast<GLchar *>(log_info.c_str()));
-		std::cout << log_info << std::endl;
-        return log_info;
-	}
+    if (auto err_msg = check_program_errors(id)) {
+        return *err_msg;
+    }
 
     glDeleteShader(vert_shader);
     glDeleteShader(frag_shader);
@@ -71,21 +59,21 @@ Shader& Shader::set_matrix3(const glm::mat3& matrix, const std::string_view name
 
 std::variant<Shader, std::string> Shader::create(std::string_view vertex_filename, const char *fragment_filename)
 {
-    const std::string vertex_source = util::read_to_string(vertex_filename.data());
-    const std::string fragment_source = util::read_to_string(fragment_filename);
+    std::string vertex_source = read_to_string(vertex_filename);
+    std::string fragment_source = read_to_string(fragment_filename);
 
-    const auto vert_res = compile_shader(vertex_source, GL_VERTEX_SHADER);
+    auto vert_res = compile_shader(vertex_source, GL_VERTEX_SHADER);
     if (const auto *err_value = std::get_if<std::string>(&vert_res)) {
         return *err_value + "vertex shader compile error";  
     }
 
-    const auto frag_res = compile_shader(fragment_source, GL_FRAGMENT_SHADER);
+    auto frag_res = compile_shader(fragment_source, GL_FRAGMENT_SHADER);
     if (const auto *err_value = std::get_if<std::string>(&frag_res)) {
         return *err_value + "fragment shader compile error";
     }
 
-    const auto vertex_shader = std::get<GLuint>(vert_res);
-    const auto fragment_shader = std::get<GLuint>(frag_res);
+    auto vertex_shader = std::get<GLuint>(vert_res);
+    auto fragment_shader = std::get<GLuint>(frag_res);
 
     const auto program = create_program(vertex_shader, fragment_shader);
     if (const auto *err_value = std::get_if<std::string>(&program)) {
@@ -93,6 +81,49 @@ std::variant<Shader, std::string> Shader::create(std::string_view vertex_filenam
     }
 
     return Shader(std::get<GLuint>(program));
+}
+
+std::optional<std::string> Shader::check_compile_errors(GLuint program)
+{
+    int success;
+    std::string log_info(512, '\0');
+
+	glGetShaderiv(program, GL_COMPILE_STATUS, &success);
+	if (success == GL_FALSE) {
+		glGetShaderInfoLog(program, 512, nullptr, const_cast<GLchar *>(log_info.c_str()));
+        return log_info;
+	}
+
+    return std::nullopt;
+}
+
+std::optional<std::string> Shader::check_program_errors(GLuint program)
+{
+    int success;
+    std::string log_info(512, '\0');
+
+    glGetProgramiv(program, GL_LINK_STATUS, &success);
+    if (success == GL_FALSE) {
+        glGetProgramInfoLog(program, 512, nullptr, const_cast<GLchar *>(log_info.c_str()));
+        return log_info;
+    }
+
+    return std::nullopt;
+}
+
+std::string read_to_string(std::string_view filename)
+{
+    std::ifstream stream(filename.data());
+
+    std::string result;
+    std::string line;
+    while (std::getline(stream, line)) {
+        result += line;
+        result.push_back('\n');
+    }
+    
+    stream.close();
+    return result;
 }
 
 void Shader::use() const  { glUseProgram(m_id); }

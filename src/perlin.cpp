@@ -16,7 +16,13 @@ void PerlinNoise::fill_permutations()
             m_permutations.end());
 }
 
-float PerlinNoise::get_value(float x, float y)
+float lerp(float a, float b, float t)
+{
+    float f = t * t * t * (t * (t * 6 - 15) + 10);
+    return a + f * (b - a);
+}
+
+float PerlinNoise::noise(float x, float y) const
 {
     const int ix = std::floor(x);
     const int iy = std::floor(y);
@@ -31,13 +37,13 @@ float PerlinNoise::get_value(float x, float y)
 
     float d1 = top_left.dot(vec2(dx, dy));
     float d2 = top_right.dot(vec2(dx - 1.0f, dy));
-    const float r1 = util::interpolate(d1, d2, dx);
+    const float r1 = lerp(d1, d2, dx);
 
     d1 = bot_left.dot(vec2(dx, dy - 1.0f));
     d2 = bot_right.dot(vec2(dx - 1.0f, dy - 1.0f));
-    const float r2 = util::interpolate(d1, d2, dx);
+    const float r2 = lerp(d1, d2, dx);
 
-    return util::interpolate(r1, r2, dy);
+    return lerp(r1, r2, dy);
 }
 
 vec2 PerlinNoise::get_gradient_vec(int x, int y) const

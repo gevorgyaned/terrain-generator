@@ -1,22 +1,23 @@
 #include "terrain.h"
 
-TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t height, const TerrainParams& params)
-    : m_params{params} 
-    , m_chunks{generate_chunks(gen, width, height)}
+TerrainMesh::TerrainMesh(FBM const &noise, std::size_t width, std::size_t height, const TerrainParams& params)
+    : _params{params} 
+    , _chunks{generate_chunks(noise, width, height)}
 { }
 
-std::vector<Chunk> TerrainMesh::generate_chunks(NoiseGenerator& m_gen, size_t width, size_t height) 
+std::vector<Chunk> TerrainMesh::generate_chunks(FBM const &noise, size_t width, size_t height) 
 {
     std::vector<Chunk> chunks;
+
     chunks.reserve(width * height);
 
     const float d = 0.1f * static_cast<float>(CHUNK_SIDE);
 
     for (size_t i = 0; i < width; ++i) {
         for (size_t j = 0; j < height; ++j) {
-            const auto pos = glm::dvec2(i, j);
-            const auto offset = glm::vec2((float)i * d, (float)j * d);
-            chunks.emplace_back(m_gen, pos, offset, m_params);
+            auto pos = glm::dvec2(i, j);
+            auto offset = glm::vec2((float)i * d, (float)j * d);
+            chunks.emplace_back(noise, pos, offset, _params);
         }
     }
 
@@ -25,11 +26,12 @@ std::vector<Chunk> TerrainMesh::generate_chunks(NoiseGenerator& m_gen, size_t wi
 
 void TerrainMesh::reset(const TerrainParams& params)
 {
-    if (params != m_params) {
-        m_params = params;
+    if (params != _params) {
+        _params = params;
 
-        for (auto& chunk : m_chunks) {
-            chunk.regenerate(m_params);
+        for (auto& chunk : _chunks) {
+            chunk.regenerate(_params);
         }
     }
 }
+

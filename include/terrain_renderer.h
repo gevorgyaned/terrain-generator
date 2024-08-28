@@ -3,16 +3,17 @@
 
 #include "shader.h"
 #include "terrain.h"
+
 #include "glad/glad.h"
 
 class TerrainRenderer {
 public:
-    explicit TerrainRenderer(TerrainMesh& terrain_mesh);
+    TerrainRenderer(TerrainMesh& terrain_mesh);
 
 public:
     void draw(Shader& program) const;
 
-    static void set_polygon_mode(GLenum mode)
+    void set_polygon_mode(GLenum mode)
     { glPolygonMode(GL_FRONT_AND_BACK, mode); }
     
 private:

@@ -8,6 +8,8 @@
 #include <glm/glm.hpp> 
 #include <glm/gtc/matrix_transform.hpp> 
 
+#include <memory>
+
 constexpr int SCR_WIDTH = 800;
 constexpr int SCR_HEIGHT = 800;
 
@@ -74,8 +76,10 @@ int main()
 
     TerrainParams params;
 
-    PerlinNoise noise;
-    TerrainMesh mesh(noise, 4, 4, params);
+    std::shared_ptr<NoiseGenerator> noise = std::make_shared<PerlinNoise>();
+
+    FBM fbm(noise);
+    TerrainMesh mesh(fbm, 4, 4, params);
 
     TerrainRenderer render(mesh);
 
@@ -128,29 +132,6 @@ int main()
     glfwTerminate();
 }
 
-void change_params(TerrainParams& params, GLenum option)
-{
-    int s = option == GLFW_KEY_KP_ADD ? 1 : -1;
-    switch (current) {
-        case Param::Amplitude:
-            params.amplitude += s * (0.01);
-            break;
-        case Param::Frequency:
-            params.frequency += s * (0.01f);
-            break;
-        case Param::Scale:
-            params.scale += s * (0.1f);
-            break;
-        case Param::Stride:
-            params.stride += s * (0.01f);
-            break;
-        case Param::Elevage:
-            params.elevage += s * (0.02f);
-            break;
-    };
-}
-
-
 void process(GLFWwindow *window, TerrainParams& params) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) 
         glfwSetWindowShouldClose(window, true); 
@@ -167,20 +148,6 @@ void process(GLFWwindow *window, TerrainParams& params) {
         camera.process_keyboard(MoveDirection::Up, delta_time);
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         camera.process_keyboard(MoveDirection::Down, delta_time);
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS) 
-        current = Param::Amplitude;
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
-        current = Param::Frequency;
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
-        current = Param::Scale;
-    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
-        current = Param::Stride;
-    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
-        current = Param::Elevage;
-    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
-        change_params(params, GLFW_KEY_KP_ADD);
-    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
-        change_params(params, GLFW_KEY_KP_SUBTRACT);
 }
 
 void mouse_callback(GLFWwindow *, const double xPos, const double yPos)

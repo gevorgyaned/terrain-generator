@@ -3,14 +3,9 @@
 
 #include <fstream>
 
-#include "noise_gen.h"
+#include "perlin.h"
 
 struct TerrainParams {
-    float amplitude = 2.0f;
-    float frequency = 0.5f;
-    float scale = 40.f;
-    float stride = 2.0f;
-    float elevage = 0.5f;
     
     bool operator!= (const TerrainParams& rhs) const {
         return amplitude != rhs.amplitude ||
@@ -28,7 +23,7 @@ namespace util {
 
     float interpolate(float a, float b, float t);
 
-    float fbm(NoiseGenerator&, float x, float y, const TerrainParams& params);
+    float fbm(PerlinNoise&, float x, float y, const TerrainParams& params);
 };
 
 #endif /* UTIL_H */

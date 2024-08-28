@@ -28,9 +28,9 @@ public:
         , m_speed { 3.0f }
 	{  update_vectors(); }
 
-    [[nodiscard]] glm::mat4 get_view_matrix() const;
+    glm::mat4 get_view_matrix() const;
+    glm::vec3 get_position() const;
 
-    [[nodiscard]] glm::vec3 get_position() const;
     void process_mouse(float x, float y);
     void process_keyboard(MoveDirection dir, float delta_time);
 
@@ -50,3 +50,4 @@ private:
 };
 
 #endif /* CAMERA_H */
+
