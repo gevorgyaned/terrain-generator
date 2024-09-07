@@ -5,7 +5,9 @@
 #include <algorithm>
 #include <vector>
 
-#include "vec2.h"
+#include <glm/glm/vec2.hpp>
+#include <glm/ext/quaternion_geometric.hpp>
+
 #include "noise.h"
 
 class PerlinNoise : public NoiseGenerator {
@@ -20,7 +22,7 @@ public:
 
 private:
     void fill_permutations();
-    vec2 get_gradient_vec(int x, int y) const;
+    glm::vec2 get_gradient_vec(int x, int y) const;
     std::size_t get_size() const;
 
     static float lerp(float a, float b, float t);
@@ -28,7 +30,8 @@ private:
 private:
     std::size_t m_size;
     std::vector<int> m_permutations;
-    std::vector<vec2> m_rand_grad;
+    std::vector<glm::vec2> m_rand_grad;
 };
 
 #endif /* PERLIN_H */
+ 

@@ -4,7 +4,6 @@
 #define GLM_ENABLE_EXPERIMENTAL
 
 #include "vertex.h"
-#include "utility.h"
 #include "camera.h"
 #include "fbm.h"
 
@@ -46,7 +45,7 @@ private:
     void set_normals(std::vector<Vertex> &vertices, std::vector<int> const &indicies);
 
     void normalize_vertex_normals(std::vector<Vertex>& vertices);
-    void add_vertex_normals(std::vector<Vertex> &vertices, std::vector<int> const &indicies);
+    void accumulate_vertex_normals(std::vector<Vertex> &vertices, std::vector<int> const &indicies);
 
 public:
     FBM _noise;

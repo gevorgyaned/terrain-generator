@@ -10,8 +10,6 @@
 #include <iostream>
 #include <optional>
 
-#include "utility.h"
-
 class Shader {
 public:
     static std::variant<Shader, std::string> create(std::string_view, const char *fragment_shader);

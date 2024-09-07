@@ -3,7 +3,6 @@
 
 #include "chunk.h"
 #include "perlin.h"
-#include "utility.h"
 
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>

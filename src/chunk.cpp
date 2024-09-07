@@ -47,11 +47,11 @@ glm::vec3 get_triangle_normal(Vertex const &a, Vertex const &b, Vertex const &c)
 
 void Chunk::set_normals(std::vector<Vertex> &vertices, std::vector<int> const &indicies)
 {
-    add_vertex_normals(vertices, indicies);
+    accumulate_vertex_normals(vertices, indicies);
     normalize_vertex_normals(vertices);
 }
 
-void Chunk::add_vertex_normals(std::vector<Vertex> &vertices, std::vector<int> const &indicies)
+void Chunk::accumulate_vertex_normals(std::vector<Vertex> &vertices, std::vector<int> const &indicies)
 {
     for (size_t i = 0; i < indicies.size(); i += 3) {
         Vertex& a = vertices[indicies[i]];
@@ -114,7 +114,7 @@ std::vector<int> Chunk::generate_indicies(size_t chunk_side)
         for (size_t j = 0; j < chunk_side; ++j) {
             size_t base = i * (chunk_side + 1) + j;
 
-            std::transform(begin(offsets), end(offsets), back_inserter(indicies), 
+            std::transform(offsets.begin(), offsets.end(), back_inserter(indicies), 
                 [base](auto offset) { return offset + base; });
         }
     }
