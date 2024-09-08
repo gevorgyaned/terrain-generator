@@ -17,7 +17,7 @@ public:
     static std::variant<Shader, std::string> create(const std::string& vertex_source, const std::string& fragment_shader);
 
 public:
-	[[nodiscard]] GLuint get_id() const;
+	GLuint get_id() const;
 	void use() const;
 
 	Shader& set_float3(const glm::vec3& value, std::string_view name);

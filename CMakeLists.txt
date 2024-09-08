@@ -18,6 +18,7 @@ add_executable(TerrainGeneration
         src/camera.cpp
         src/terrain_renderer.cpp
         src/chunk.cpp
+        src/texture.cpp
         external/glad/glad.c
 )
 
@@ -26,6 +27,7 @@ find_package(glfw3 REQUIRED)
 target_include_directories(TerrainGeneration PRIVATE
         ${PROJECT_SOURCE_DIR}/include
         ${PROJECT_SOURCE_DIR}/external
+        ${PROJECT_SOURCE_DIR}/external/glm
 )
 
 target_link_libraries(TerrainGeneration PRIVATE glfw)

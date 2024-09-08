@@ -6,6 +6,7 @@
 #include "utility.h"
 #include "perlin.h"
 
+#define GLM_ENABLE_EXPERIMENTAL
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -33,10 +34,10 @@ public:
     Chunk& operator=(const Chunk& rhs) = delete;
 
 public:
-    [[nodiscard]] GLuint get_VAO() const { return VAO; }
+    GLuint get_VAO() const { return VAO; }
 
-	[[nodiscard]] size_t indicies_size() const { return indicies.size(); }
-    [[nodiscard]] bool is_visible(const glm::vec3& camera_coords,
+	size_t indicies_size() const { return indicies.size(); }
+    bool is_visible(const glm::vec3& camera_coords,
             const glm::vec3& euler_angles) const;
        
     void regenerate(const TerrainParams& params);

@@ -57,7 +57,7 @@ int main()
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    auto shader_res = Shader::create("../shaders/vert.glsl", "../shaders/frag.glsl");
+    auto shader_res = Shader::create("shaders/vert.glsl", "shaders/frag.glsl");
     if (const auto *err_value = std::get_if<std::string>(&shader_res)) {
         std::cerr << *err_value << std::endl;
         exit(1);
@@ -66,7 +66,7 @@ int main()
     auto& shader = std::get<Shader>(shader_res);
 
     constexpr glm::vec3 target_color(0.039f, 0.5f, 0.3f);
-	glfwSwapInterval(1);
+	//glfwSwapInterval(1);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     int fps = 0;
@@ -80,7 +80,6 @@ int main()
     TerrainRenderer render(mesh);
 
     while (!glfwWindowShouldClose(window)) {
-        glfwPollEvents();
         process(window, params);
         
         mesh.reset(params);
@@ -177,9 +176,9 @@ void process(GLFWwindow *window, TerrainParams& params) {
         current = Param::Stride;
     if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
         current = Param::Elevage;
-    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
         change_params(params, GLFW_KEY_KP_ADD);
-    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS)
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS)
         change_params(params, GLFW_KEY_KP_SUBTRACT);
 }
 

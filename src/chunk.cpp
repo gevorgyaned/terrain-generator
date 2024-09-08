@@ -23,11 +23,11 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(),
-			vertices.data(), GL_DYNAMIC_DRAW);
+        vertices.data(), GL_DYNAMIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * indicies.size(), 
-            indicies.data(), GL_STATIC_DRAW);
+        indicies.data(), GL_STATIC_DRAW);
 
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(0);
@@ -85,7 +85,7 @@ void Chunk::set_normals()
 
     for (size_t i = 0; i < normal_count.size(); ++i) {
         vertices[i].normal = glm::normalize(vertices[i].normal 
-                / static_cast<float>(normal_count[i]));
+            / static_cast<float>(normal_count[i]));
     }
 }
 
@@ -127,10 +127,8 @@ std::vector<unsigned> Chunk::generate_indicies()
         for (size_t j = 0; j < CHUNK_SIDE; ++j) {
             auto base = i * (CHUNK_SIDE + 1) + j;
 
-            std::transform(
-                std::begin(offsets), 
-                std::end(offsets), 
-                std::back_inserter(indicies),
+            std::transform(std::begin(offsets), 
+                std::end(offsets), std::back_inserter(indicies),
                 [base](auto offset) { return offset + base; }
             );
         }

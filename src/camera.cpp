@@ -59,3 +59,4 @@ void Camera::update_vectors()
 }
 
 glm::vec3 Camera::get_position() const { return m_camera_pos; }
+

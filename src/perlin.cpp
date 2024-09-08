@@ -42,5 +42,6 @@ float PerlinNoise::get_value(float x, float y)
 
 vec2 PerlinNoise::get_gradient_vec(int x, int y) const
 {
-    return m_rand_grad[(m_permutations[x % m_size] + y % m_size) % m_size];
+        return m_rand_grad[(m_permutations[x % m_size] + y % m_size) % m_size];
+    return m_rand_grad[(static_cast<int>(rand_a * x) ^ static_cast<int>(rand_b * y)) >> 24];
 }   
