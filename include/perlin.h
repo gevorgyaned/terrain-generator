@@ -2,7 +2,7 @@
 #define PERLIN_H
 
 #include "utility.h"
-#include "noise_gen.h"
+#include "noise.h"
 
 #include <random>
 #include <algorithm>

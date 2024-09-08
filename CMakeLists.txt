@@ -18,6 +18,7 @@ add_executable(TerrainGeneration
         src/terrain_renderer.cpp
         src/chunk.cpp
         src/texture.cpp
+        src/fbm.cpp
         external/glad/glad.c
 )
 

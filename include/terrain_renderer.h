@@ -3,7 +3,8 @@
 
 #include "shader.h"
 #include "terrain.h"
-#include "glad/glad.h"
+
+#include <glad/glad.h>
 
 class TerrainRenderer {
 public:

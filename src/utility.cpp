@@ -2,8 +2,7 @@
 
 float util::interpolate(float a, float b, float t)
 {
-    float f = t * t * t * (t * (t * 6 - 15) + 10);
-    return a + f * (b - a);
+   
 }
 
 std::string util::read_to_string(const char *filename)

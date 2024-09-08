@@ -5,7 +5,7 @@
 #include "chunk.h"
 #include "perlin.h"
 #include "shader.h"
-#include "noise_gen.h"
+#include "noise.h"
 #include "utility.h"
 
 #include "glad/glad.h"

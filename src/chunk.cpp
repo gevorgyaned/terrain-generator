@@ -13,8 +13,6 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
     , indicies{generate_indicies()}
     , vertices{generate_vertices()}
 {
-    set_normals();
-
     // creating buffers
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
@@ -55,37 +53,41 @@ void Chunk::regenerate(const TerrainParams& params)
     m_params = params;
 
     vertices = generate_vertices();
-    set_normals();
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_DYNAMIC_DRAW);
 }
 
-void Chunk::set_normals()
+void Chunk::set_normals(std::vector<Vertex> &vertices, std::vector<uint> const &indicies)
 {
-    std::vector<int> normal_count(vertices.size());
+    accumulate_vertex_normals(vertices, indicies);
+    normalize_vertex_normals(vertices);
+}
 
+void Chunk::accumulate_vertex_normals(std::vector<Vertex> &vertices, std::vector<uint> const &indicies)
+{
     for (size_t i = 0; i < indicies.size(); i += 3) {
         Vertex& a = vertices[indicies[i]];
         Vertex& b = vertices[indicies[i + 1]];
         Vertex& c = vertices[indicies[i + 2]];
 
-        const glm::vec3 normal = glm::normalize(glm::cross(
-            (b.position - a.position),
-            (c.position - a.position)));
+        auto normal = glm::normalize(glm::cross(
+            (b.position - a.position), (c.position - a.position)));
 
         a.normal += normal;
         b.normal += normal;
         c.normal += normal;
 
-        normal_count[indicies[i]]++;
-        normal_count[indicies[i + 1]]++;
-        normal_count[indicies[i + 2]]++;
+        a.normals_count++;
+        b.normals_count++;
+        c.normals_count++;
     }
+}
 
-    for (size_t i = 0; i < normal_count.size(); ++i) {
-        vertices[i].normal = glm::normalize(vertices[i].normal 
-            / static_cast<float>(normal_count[i]));
+void Chunk::normalize_vertex_normals(std::vector<Vertex>& vertices)
+{
+    for (auto& vertex : vertices) {
+        vertex.normal = glm::normalize(vertex.normal / static_cast<float>(vertex.normals_count));
     }
 }
 
@@ -111,6 +113,7 @@ std::vector<Vertex> Chunk::generate_vertices()
         z_pos += 0.1f;
     }
 
+    set_normals(heightmap, indicies);
     return heightmap;
 }
 
@@ -136,3 +139,4 @@ std::vector<unsigned> Chunk::generate_indicies()
 
     return indicies;
 }
+

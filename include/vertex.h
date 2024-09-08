@@ -9,20 +9,22 @@
 
 struct Vertex {
     Vertex(const glm::vec3& pos = glm::vec3(), const glm::vec3& norm = glm::vec3())
-        : position{pos}
-        , normal{norm}
+        : position(pos)
+        , normal(norm)
+        , normals_count(0)
     {  }
 
     Vertex() = default;
 
     Vertex& operator=(const Vertex& other) = default;
 
-    [[nodiscard]] inline std::tuple<float, float, float> get_position() const;
+    inline std::tuple<float, float, float> get_position() const;
 
     friend std::ostream& operator<<(std::ostream& stream, Vertex& vert);
 
     glm::vec3 position;
     glm::vec3 normal;
+    uint normals_count;
 };
 
 inline std::tuple<float, float, float> Vertex::get_position() const

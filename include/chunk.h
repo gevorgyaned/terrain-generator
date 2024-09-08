@@ -2,7 +2,7 @@
 #define CHUNK_H
 
 #include "vertex.h"
-#include "noise_gen.h"
+#include "noise.h"
 #include "utility.h"
 #include "perlin.h"
 
@@ -45,7 +45,9 @@ public:
 private:
     std::vector<Vertex> generate_vertices();
     std::vector<unsigned> generate_indicies();
-    void set_normals();
+    void normalize_vertex_normals(std::vector<Vertex>& vertices);
+    void accumulate_vertex_normals(std::vector<Vertex> &vertices, std::vector<uint> const &indicies);
+    void set_normals(std::vector<Vertex> &vertices, std::vector<uint> const &indicies);
 
 public:
     NoiseGenerator& m_gen;
@@ -57,7 +59,7 @@ public:
 
     GLuint VAO, EBO, VBO;
 
-    std::vector<unsigned> indicies;
+    std::vector<uint> indicies;
     std::vector<Vertex> vertices;
 };
 
