@@ -1,4 +1,4 @@
-#include "chunk.h"
+#include "chunk.hpp"
 
 #include <glm/gtx/string_cast.hpp>
 #include <iterator>
@@ -51,9 +51,7 @@ Chunk& Chunk::operator=(Chunk&& rhs) noexcept {
 void Chunk::regenerate(const TerrainParams& params)
 {
     m_params = params;
-
     vertices = generate_vertices();
-
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex), vertices.data(), GL_DYNAMIC_DRAW);
 }

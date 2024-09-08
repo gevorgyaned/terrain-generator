@@ -3,7 +3,7 @@
 
 #include <fstream>
 
-#include "noise.h"
+#include "noise.hpp"
 
 struct TerrainParams {
     float amplitude = 2.0f;

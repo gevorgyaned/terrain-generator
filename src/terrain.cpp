@@ -1,4 +1,4 @@
-#include "terrain.h"
+#include "terrain.hpp"
 
 TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t height, const TerrainParams& params)
     : m_params{params} 

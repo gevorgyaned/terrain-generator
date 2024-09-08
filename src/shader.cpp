@@ -1,4 +1,4 @@
-#include "shader.h"
+#include "shader.hpp"
 
 std::variant<GLuint, std::string> Shader::compile_shader(const std::string& contents, GLenum shader_type)
 {

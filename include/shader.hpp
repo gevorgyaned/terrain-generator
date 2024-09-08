@@ -9,7 +9,7 @@
 #include <string_view>
 #include <iostream>
 
-#include "utility.h"
+#include "utility.hpp"
 
 class Shader {
 public:

@@ -1,4 +1,4 @@
-#include "camera.h"
+#include "camera.hpp"
 
 glm::mat4 Camera::get_view_matrix() const
 {

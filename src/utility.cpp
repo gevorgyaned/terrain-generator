@@ -1,4 +1,4 @@
-#include "utility.h"
+#include "utility.hpp"
 
 float util::interpolate(float a, float b, float t)
 {

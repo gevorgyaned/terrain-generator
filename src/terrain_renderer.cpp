@@ -1,4 +1,4 @@
-#include "terrain_renderer.h"
+#include "terrain_renderer.hpp"
 
 TerrainRenderer::TerrainRenderer(TerrainMesh& terrain_mesh)
     : m_terrain_mesh { terrain_mesh }

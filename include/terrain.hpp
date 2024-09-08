@@ -1,12 +1,12 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-#include "vertex.h"
-#include "chunk.h"
-#include "perlin.h"
-#include "shader.h"
-#include "noise.h"
-#include "utility.h"
+#include "vertex.hpp"
+#include "chunk.hpp"
+#include "perlin.hpp"
+#include "shader.hpp"
+#include "noise.hpp"
+#include "utility.hpp"
 
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>

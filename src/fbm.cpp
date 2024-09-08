@@ -1,4 +1,4 @@
-#include "fbm.h"
+#include "fbm.hpp"
 
 float FBM::generate(float x, float y) const 
 {

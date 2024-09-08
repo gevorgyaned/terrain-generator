@@ -1,10 +1,10 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
-#include "vertex.h"
-#include "noise.h"
-#include "utility.h"
-#include "perlin.h"
+#include "vertex.hpp"
+#include "noise.hpp"
+#include "utility.hpp"
+#include "perlin.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glad/glad.h>

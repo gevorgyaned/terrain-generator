@@ -1,7 +1,7 @@
-#ifndef FBM_H
-#define FBM_H
+#ifndef FBM_HPP
+#define FBM_HPP
 
-#include "noise.h"
+#include "noise.hpp"
 
 #include <memory>
 
@@ -29,5 +29,5 @@ private:
     int m_octaves;
 };
 
-#endif /* FBM_H */
+#endif /* FBM_HPP */
 

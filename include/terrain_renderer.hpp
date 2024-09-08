@@ -1,8 +1,8 @@
 #ifndef TERRAIN_RENDERER_H
 #define TERRAIN_RENDERER_H
 
-#include "shader.h"
-#include "terrain.h"
+#include "shader.hpp"
+#include "terrain.hpp"
 
 #include <glad/glad.h>
 

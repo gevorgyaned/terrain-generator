@@ -1,4 +1,4 @@
-#include "perlin.h"
+#include "perlin.hpp"
 
 std::mt19937 PerlinNoise::random_engine (std::random_device{} ());
 

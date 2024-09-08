@@ -1,8 +1,8 @@
 #ifndef PERLIN_H
 #define PERLIN_H
 
-#include "utility.h"
-#include "noise.h"
+#include "utility.hpp"
+#include "noise.hpp"
 
 #include <random>
 #include <algorithm>

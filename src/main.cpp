@@ -1,8 +1,8 @@
-#include "terrain.h" 
-#include "perlin.h" 
-#include "shader.h" 
-#include "camera.h" 
-#include "terrain_renderer.h"
+#include "terrain.hpp" 
+#include "perlin.hpp" 
+#include "shader.hpp" 
+#include "camera.hpp" 
+#include "terrain_renderer.hpp"
 
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp> 
