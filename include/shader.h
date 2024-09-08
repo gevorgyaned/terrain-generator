@@ -4,7 +4,7 @@
 #include "glad/glad.h"
 #include <glm/gtc/type_ptr.hpp>
 
-#include <fstream>
+#include <istream>
 #include <variant>
 #include <string_view>
 #include <iostream>
@@ -31,6 +31,8 @@ private:
 private:
     static std::variant<GLuint, std::string> compile_shader(const std::string&, GLenum shader_type);
     static std::variant<GLuint, std::string> create_program(GLuint frag_shader, GLuint vert_shader);
+
+    static std::string read_to_string(std::string_view filename);
 
 private:
 	GLuint m_id;

@@ -14,7 +14,6 @@ add_executable(TerrainGeneration
         src/perlin.cpp
         src/shader.cpp
         src/utility.cpp
-        src/vec2.cpp
         src/camera.cpp
         src/terrain_renderer.cpp
         src/chunk.cpp

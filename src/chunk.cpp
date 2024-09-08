@@ -91,9 +91,9 @@ void Chunk::set_normals()
 
 std::vector<Vertex> Chunk::generate_vertices()
 {
-    std::vector<Vertex> heightmap((CHUNK_SIDE + 1) * (CHUNK_SIDE + 1));
+    std::vector<Vertex> heightmap;
+    heightmap.reserve((CHUNK_SIDE + 1) * (CHUNK_SIDE + 1));
     
-    int idx = 0;
     float z_pos = m_begin_coords[1];
 
     for (size_t i = 0; i < CHUNK_SIDE + 1; ++i) {
@@ -102,8 +102,8 @@ std::vector<Vertex> Chunk::generate_vertices()
             const auto mesh_x = static_cast<float>(j + CHUNK_SIDE * m_chunk_id[0]);
             const auto mesh_y = static_cast<float>(i + CHUNK_SIDE * m_chunk_id[1]);
 
-            heightmap[idx++].position = glm::vec3(
-                    x_pos, util::fbm(m_gen, mesh_x, mesh_y, m_params), z_pos);
+            heightmap.emplace_back(glm::vec3(
+                x_pos, util::fbm(m_gen, mesh_x, mesh_y, m_params), z_pos));
 
             x_pos += 0.1f;
         }
@@ -127,8 +127,8 @@ std::vector<unsigned> Chunk::generate_indicies()
         for (size_t j = 0; j < CHUNK_SIDE; ++j) {
             auto base = i * (CHUNK_SIDE + 1) + j;
 
-            std::transform(std::begin(offsets), 
-                std::end(offsets), std::back_inserter(indicies),
+            std::transform(std::begin(offsets), std::end(offsets), 
+                std::back_inserter(indicies),
                 [base](auto offset) { return offset + base; }
             );
         }

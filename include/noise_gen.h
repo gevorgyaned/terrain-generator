@@ -6,6 +6,9 @@ public:
     virtual ~NoiseGenerator() = default;
 
     virtual float get_value(float x, float y) = 0;
+
+    virtual float get_value(float x, float y, float z) = 0;
 };
 
 #endif /* NOISE_GEN_H */
+

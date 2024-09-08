@@ -1,19 +1,26 @@
 #include "perlin.h"
 
-void PerlinNoise::fill_permutations()
+std::mt19937 PerlinNoise::random_engine (std::random_device{} ());
+
+PerlinNoise::PerlinNoise(std::size_t size)
+    : m_size(size)
+    , m_gradients(generate_gradients())
+{ 
+    std::uniform_real_distribution<> dis(0.0, 100000.0);
+    m_rand = dis(random_engine);
+}
+
+std::vector<glm::vec2> PerlinNoise::generate_gradients()
 {
-    std::random_device rd;
-    std::mt19937 g(rd());
     std::uniform_real_distribution<> dis(0.0, 100.0);
+    std::vector<glm::vec2> gradients;
+    gradients.reserve(m_size);
 
     for (size_t i = 0; i < m_size; ++i) {
-        m_rand_grad[i] = vec2(sin(dis(g)), cos(dis(g)));
-        m_permutations[i] = i + 1;
+        m_gradients.emplace_back(sin(dis(random_engine)), cos(dis(random_engine)));
     }
 
-    std::shuffle(m_permutations.begin(), m_permutations.end(), g);
-    m_permutations.insert(m_permutations.end(), m_permutations.begin(), 
-            m_permutations.end());
+    return gradients;
 }
 
 float PerlinNoise::get_value(float x, float y)
@@ -24,24 +31,29 @@ float PerlinNoise::get_value(float x, float y)
     const float dx = x - static_cast<float>(ix);
     const float dy = y - static_cast<float>(iy);
     
-    const vec2 top_left  = get_gradient_vec(ix, iy);
-    const vec2 top_right = get_gradient_vec(ix + 1, iy);
-    const vec2 bot_left  = get_gradient_vec(ix, iy + 1);
-    const vec2 bot_right = get_gradient_vec(ix + 1, iy + 1);
+    const glm::vec2 top_left  = get_gradient_vec(ix, iy);
+    const glm::vec2 top_right = get_gradient_vec(ix + 1, iy);
+    const glm::vec2 bot_left  = get_gradient_vec(ix, iy + 1);
+    const glm::vec2 bot_right = get_gradient_vec(ix + 1, iy + 1);
 
-    float d1 = top_left.dot(vec2(dx, dy));
-    float d2 = top_right.dot(vec2(dx - 1.0f, dy));
-    const float r1 = util::interpolate(d1, d2, dx);
+    float d1 = glm::dot(top_left, glm::vec2(dx, dy));
+    float d2 = glm::dot(top_right, glm::vec2(dx - 1.0f, dy));
+    const float r1 = interpolate(d1, d2, dx);
 
-    d1 = bot_left.dot(vec2(dx, dy - 1.0f));
-    d2 = bot_right.dot(vec2(dx - 1.0f, dy - 1.0f));
-    const float r2 = util::interpolate(d1, d2, dx);
+    d1 = glm::dot(bot_left, glm::vec2(dx, dy - 1.0f));
+    d2 = glm::dot(bot_right, glm::vec2(dx - 1.0f, dy - 1.0f));
+    const float r2 = interpolate(d1, d2, dx);
 
-    return util::interpolate(r1, r2, dy);
+    return interpolate(r1, r2, dy);
 }
 
-vec2 PerlinNoise::get_gradient_vec(int x, int y) const
+float PerlinNoise::interpolate(float a, float b, float t)
 {
-        return m_rand_grad[(m_permutations[x % m_size] + y % m_size) % m_size];
-    return m_rand_grad[(static_cast<int>(rand_a * x) ^ static_cast<int>(rand_b * y)) >> 24];
+    float f = t * t * t * (t * (t * 6 - 15) + 10);
+    return a + f * (b - a);
+}
+
+glm::vec2 PerlinNoise::get_gradient_vec(int x, int y) const
+{
+    return m_gradients[static_cast<long>(m_rand * x + y) % m_size];
 }   

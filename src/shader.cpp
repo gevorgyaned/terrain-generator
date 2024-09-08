@@ -95,6 +95,21 @@ std::variant<Shader, std::string> Shader::create(std::string_view vertex_filenam
     return Shader(std::get<GLuint>(program));
 }
 
+std::string Shader::read_to_string(std::string_view filename)
+{
+    std::ifstream stream(filename.data());
+
+    std::string result;
+    std::string line;
+    while (std::getline(stream, line)) {
+        result += line;
+        result.push_back('\n');
+    }
+    
+    stream.close();
+    return result;
+}
+
 void Shader::use() const  { glUseProgram(m_id); }
 
 GLuint Shader::get_id() const { return m_id; }

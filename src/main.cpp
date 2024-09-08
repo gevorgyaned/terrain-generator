@@ -131,21 +131,21 @@ void change_params(TerrainParams& params, GLenum option)
 {
     int s = option == GLFW_KEY_KP_ADD ? 1 : -1;
     switch (current) {
-        case Param::Amplitude:
-            params.amplitude += s * (0.01);
-            break;
-        case Param::Frequency:
-            params.frequency += s * (0.01f);
-            break;
-        case Param::Scale:
-            params.scale += s * (0.1f);
-            break;
-        case Param::Stride:
-            params.stride += s * (0.01f);
-            break;
-        case Param::Elevage:
-            params.elevage += s * (0.02f);
-            break;
+    case Param::Amplitude:
+        params.amplitude += s * (0.01);
+        break;
+    case Param::Frequency:
+        params.frequency += s * (0.01f);
+        break;
+    case Param::Scale:
+        params.scale += s * (0.1f);
+        break;
+    case Param::Stride:
+        params.stride += s * (0.01f);
+        break;
+    case Param::Elevage:
+        params.elevage += s * (0.02f);
+        break;
     };
 }
 
@@ -201,3 +201,4 @@ void mouse_callback(GLFWwindow *, const double xPos, const double yPos)
 
     camera.process_mouse(xoffset, yoffset);
 }
+
