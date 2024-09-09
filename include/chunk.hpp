@@ -27,11 +27,7 @@ public:
     Chunk(NoiseGenerator& gen, const glm::dvec2& coords, 
         const glm::vec2& begin, const TerrainParams& params);
     
-    Chunk& operator=(Chunk&& rhs) noexcept;
     Chunk(Chunk&& other) = default;
-
-    Chunk(const Chunk& rhs) = delete;
-    Chunk& operator=(const Chunk& rhs) = delete;
 
 public:
     GLuint get_VAO() const { return VAO; }

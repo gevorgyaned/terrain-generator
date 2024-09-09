@@ -16,8 +16,6 @@ struct Vertex {
 
     Vertex() = default;
 
-    Vertex& operator=(const Vertex& other) = default;
-
     inline std::tuple<float, float, float> get_position() const;
 
     friend std::ostream& operator<<(std::ostream& stream, Vertex& vert);

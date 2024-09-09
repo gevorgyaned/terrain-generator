@@ -7,7 +7,7 @@ class Event {
 public:
     virtual ~Event() = default;
 
-    virtual std::string get_name() const;
+    virtual std::string get_type() const = 0;
 };
 
 #endif /* EVENT_HPP */

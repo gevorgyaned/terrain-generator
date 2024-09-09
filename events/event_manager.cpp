@@ -1,6 +1,6 @@
 #include "event_manager.hpp"
 
-void subscribe(std::string const &event_name, UP<IEventHandlerWrapper> handler)
+void subscribe(std::string const &event_name, UP<IEventHandler> handler)
 {
     event_manager.subscribe(event_name, std::move(handler));
 }
@@ -15,12 +15,12 @@ void add_event(UP<Event> event)
     event_manager.add_event(std::move(event));
 }
 
-void trigger(Event const &event)
+void trigger(Event &event)
 {
     event_manager.trigger(event);
 }
 
-void EventManager::subscribe(std::string const &event_name, UP<IEventHandlerWrapper> handler)
+void EventManager::subscribe(std::string const &event_name, UP<IEventHandler> handler)
 {
     auto subscriber = _subscribers.find(event_name);
     if (subscriber != _subscribers.end()) {
@@ -33,7 +33,7 @@ void EventManager::subscribe(std::string const &event_name, UP<IEventHandlerWrap
         
         handlers.emplace_back(std::move(handler));
     } else {
-        subscriber->second.emplace_back(std::move(handler));
+        _subscribers[event_name].emplace_back(std::move(handler));
     }
 }
 
@@ -52,11 +52,11 @@ void EventManager::add_event(UP<Event> event)
     _event_queue.emplace_back(std::move(event));
 }
 
-void EventManager::trigger(Event const &event)
+void EventManager::trigger(Event &event)
 {
-    auto &handlers = _subscribers[event.get_name()];
+    auto &handlers = _subscribers[event.get_type()];
     for (auto &it : handlers) {
-        it->exec(event); 
+        it->handle(event); 
     }
 }
 

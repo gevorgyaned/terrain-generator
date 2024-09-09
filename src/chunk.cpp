@@ -3,7 +3,6 @@
 #include <glm/gtx/string_cast.hpp>
 #include <iterator>
 
-
 Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
              const glm::vec2& begin, const TerrainParams& params)
     : m_gen{gen}
@@ -13,7 +12,6 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
     , indicies{generate_indicies()}
     , vertices{generate_vertices()}
 {
-    // creating buffers
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -27,25 +25,11 @@ Chunk::Chunk(NoiseGenerator& gen, const glm::dvec2& coords,
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned) * indicies.size(), 
         indicies.data(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)0);
 	glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void *)offsetof(Vertex, normal));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
     glEnableVertexAttribArray(1);
-}
-
-Chunk& Chunk::operator=(Chunk&& rhs) noexcept {
-    if (this != &rhs) {
-        vertices = std::exchange(rhs.vertices, std::vector<Vertex> {});
-
-        m_params = rhs.m_params;
-
-        VAO = rhs.VAO;
-        EBO = rhs.EBO;
-        VBO = rhs.VBO;
-    }
-
-    return *this;
 }
 
 void Chunk::regenerate(const TerrainParams& params)
@@ -97,6 +81,7 @@ std::vector<Vertex> Chunk::generate_vertices()
     float z_pos = m_begin_coords[1];
 
     for (size_t i = 0; i < CHUNK_SIDE + 1; ++i) {
+
         float x_pos = m_begin_coords[0];
         for (size_t j = 0; j < CHUNK_SIDE + 1; ++j) {
             const auto mesh_x = static_cast<float>(j + CHUNK_SIDE * m_chunk_id[0]);
@@ -115,7 +100,7 @@ std::vector<Vertex> Chunk::generate_vertices()
     return heightmap;
 }
 
-std::vector<unsigned> Chunk::generate_indicies()
+std::vector<uint> Chunk::generate_indicies()
 {
     std::vector<unsigned> indicies;
     indicies.reserve(CHUNK_SIZE * 6);

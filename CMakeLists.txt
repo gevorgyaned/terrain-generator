@@ -4,7 +4,7 @@ project(TerrainGeneration VERSION 1.0)
 
 add_compile_options(-g -Wall -Wextra)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
@@ -19,6 +19,7 @@ add_executable(TerrainGeneration
         src/chunk.cpp
         src/texture.cpp
         src/fbm.cpp
+        src/window.cpp
         external/glad/glad.c
 )
 
@@ -29,6 +30,8 @@ target_include_directories(TerrainGeneration PRIVATE
         ${PROJECT_SOURCE_DIR}/external
         ${PROJECT_SOURCE_DIR}/external/glm
 )
+
+add_link_options(-fsanitize=address) 
 
 target_link_libraries(TerrainGeneration PRIVATE glfw)
 

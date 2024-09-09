@@ -57,3 +57,4 @@ glm::vec2 PerlinNoise::get_gradient_vec(int x, int y) const
 {
     return m_gradients[static_cast<long>(m_rand * x + y) % m_size];
 }   
+

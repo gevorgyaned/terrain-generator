@@ -3,47 +3,42 @@
 
 #include "event.hpp"
 
-#include <iostream>
-#include <functional>
-
-template <typename EventType>
-using EventHandler = std::function<void(const EventType&)>;
-
-class IEventHandlerWrapper {
+class IEventHandler {
 public:
-    void exec(const Event& event) 
-    {
-        call(event);
-    }
+    virtual void handle(Event &e) = 0;
 
     virtual std::string get_type() const = 0;
 
-private:
-    virtual void call(const Event& event) = 0;
-}; 
+    virtual ~IEventHandler() = default;
+};
 
-template <typename EventType>
-class EventHandlerWrapper : public IEventHandlerWrapper {
+template <typename Subscriber>
+class EventHandler : public IEventHandler {
 public:
-    EventHandlerWrapper(const EventHandler<EventType>& handler) 
-        : _handler(handler)
-        , _name(_handler.target_type().name()) 
+    const std::string name;
+
+    template <typename T>
+    using CallbackFn = void(Subscriber::*)(Event &e);
+
+    explicit EventHandler(Subscriber &subscriber, CallbackFn<Subscriber> callback)
+        : m_subscriber(subscriber), m_callback(callback), m_name(typeid(Subscriber).name())
     { }
 
-private:
-    void call(const Event& event) override 
-    {
-        if (event.get_name() == std::declval<EventType>().get_type()) {
-            std::cout << event.get_name() << ", " << std::declval<EventType>().get_type() << std::endl; 
-            _handler(event);        
-        }
+    static std::string get_type_s() {
+        return typeid(Subscriber).name();
     }
 
-    std::string get_type() const override { return _name; }
+    void handle(Event &e) override {
+        (m_subscriber.*m_callback)(e);
+    }
+
+    std::string get_type() const override {
+        return name;
+    }
 
 private:
-    EventHandler<EventType> _handler;
-    const std::string _name;
+    Subscriber& m_subscriber; 
+    CallbackFn<Subscriber> m_callback;
 };
 
 #endif /* EVENT_HANDLER_HPP */
