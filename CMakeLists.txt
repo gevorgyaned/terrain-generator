@@ -9,29 +9,31 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_EXPORT_COMPILE_COMMANDS True)
 
 add_executable(TerrainGeneration
-        src/main.cpp
-        src/terrain.cpp
-        src/perlin.cpp
-        src/shader.cpp
-        src/utility.cpp
-        src/camera.cpp
-        src/terrain_renderer.cpp
-        src/chunk.cpp
-        src/texture.cpp
-        src/fbm.cpp
-        src/window.cpp
-        external/glad/glad.c
+    src/terrain.cpp
+    src/perlin.cpp
+    src/shader.cpp
+    src/camera.cpp
+    src/terrain_renderer.cpp
+    src/chunk.cpp
+    src/texture.cpp
+    src/fbm.cpp
+    src/application.cpp
+    src/window.cpp
+    src/main.cpp
+    events/event_manager.cpp
+    external/glad/glad.c
 )
 
 find_package(glfw3 REQUIRED)
 
 target_include_directories(TerrainGeneration PRIVATE
         ${PROJECT_SOURCE_DIR}/include
+        ${PROJECT_SOURCE_DIR}/events
         ${PROJECT_SOURCE_DIR}/external
         ${PROJECT_SOURCE_DIR}/external/glm
 )
 
 add_link_options(-fsanitize=address) 
 
-target_link_libraries(TerrainGeneration PRIVATE glfw)
+target_link_libraries(TerrainGeneration PRIVATE glfw) 
 

@@ -1,42 +1,37 @@
 #ifndef CHUNK_H
 #define CHUNK_H
 
+#include <glad/glad.h>
+
 #include "vertex.hpp"
-#include "noise.hpp"
-#include "utility.hpp"
-#include "perlin.hpp"
+#include "fbm.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
-#include <glad/glad.h>
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 #include <cstddef>
-#include <iostream>
 #include <vector>
-#include <utility>
 #include <algorithm>
+#include <ranges>
 
-constexpr std::size_t CHUNK_SIDE = 16;
-constexpr std::size_t CHUNK_SIZE = CHUNK_SIDE * CHUNK_SIDE;
+namespace rng = std::ranges;
 
-struct TerrainParams;
+constexpr size_t chunk_side = 16;
 
 class Chunk {
 public:
-    Chunk(NoiseGenerator& gen, const glm::dvec2& coords, 
-        const glm::vec2& begin, const TerrainParams& params);
+    Chunk(FBM& fbm, const glm::dvec2& coords, const glm::vec2& begin);
     
     Chunk(Chunk&& other) = default;
 
 public:
-    GLuint get_VAO() const { return VAO; }
+    GLuint VAO() const { return m_VAO; }
 
-	size_t indicies_size() const { return indicies.size(); }
+	size_t indicies_size() const { return m_indicies.size(); }
     bool is_visible(const glm::vec3& camera_coords,
             const glm::vec3& euler_angles) const;
        
-    void regenerate(const TerrainParams& params);
+    void update();
 
 private:
     std::vector<Vertex> generate_vertices();
@@ -46,17 +41,17 @@ private:
     void set_normals(std::vector<Vertex> &vertices, std::vector<uint> const &indicies);
 
 public:
-    NoiseGenerator& m_gen;
-
-    TerrainParams m_params;
+    FBM& m_fbm;
 
     glm::vec2 m_begin_coords;
-    glm::dvec2 m_chunk_id;
+    glm::dvec2 m_position;
 
-    GLuint VAO, EBO, VBO;
+    GLuint m_VAO, m_EBO, m_VBO;
 
-    std::vector<uint> indicies;
-    std::vector<Vertex> vertices;
+    std::vector<uint> m_indicies;
+    std::vector<Vertex> m_vertices;
+
 };
 
 #endif /* CHUNK_H */
+

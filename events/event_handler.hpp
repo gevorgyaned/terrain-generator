@@ -3,28 +3,31 @@
 
 #include "event.hpp"
 
+template <typename T>
+using UP = std::unique_ptr<T>;
+
 class IEventHandler {
 public:
+    virtual ~IEventHandler() = default;
+
+    virtual std::string_view get_type() const = 0;
+
     virtual void handle(Event &e) = 0;
 
-    virtual std::string get_type() const = 0;
-
-    virtual ~IEventHandler() = default;
+    bool is_handled { false };
 };
 
 template <typename Subscriber>
 class EventHandler : public IEventHandler {
 public:
-    const std::string name;
-
-    template <typename T>
     using CallbackFn = void(Subscriber::*)(Event &e);
 
-    explicit EventHandler(Subscriber &subscriber, CallbackFn<Subscriber> callback)
-        : m_subscriber(subscriber), m_callback(callback), m_name(typeid(Subscriber).name())
+    EventHandler(Subscriber &subscriber, CallbackFn callback) :  
+        name(typeid(Subscriber).name()), 
+        m_subscriber(subscriber), m_callback(callback)
     { }
 
-    static std::string get_type_s() {
+    static std::string_view get_type_s() {
         return typeid(Subscriber).name();
     }
 
@@ -32,13 +35,15 @@ public:
         (m_subscriber.*m_callback)(e);
     }
 
-    std::string get_type() const override {
+    std::string_view get_type() const override {
         return name;
     }
 
+    const std::string_view name;
+
 private:
     Subscriber& m_subscriber; 
-    CallbackFn<Subscriber> m_callback;
+    CallbackFn m_callback;
 };
 
 #endif /* EVENT_HANDLER_HPP */

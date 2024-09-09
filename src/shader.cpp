@@ -71,8 +71,8 @@ Shader& Shader::set_matrix3(const glm::mat3& matrix, const std::string_view name
 
 std::variant<Shader, std::string> Shader::create(std::string_view vertex_filename, const char *fragment_filename)
 {
-    const std::string vertex_source = util::read_to_string(vertex_filename.data());
-    const std::string fragment_source = util::read_to_string(fragment_filename);
+    const std::string vertex_source = read_to_string(vertex_filename.data());
+    const std::string fragment_source = read_to_string(fragment_filename);
 
     const auto vert_res = compile_shader(vertex_source, GL_VERTEX_SHADER);
     if (const auto *err_value = std::get_if<std::string>(&vert_res)) {

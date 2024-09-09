@@ -1,41 +1,38 @@
 #ifndef TERRAIN_H
 #define TERRAIN_H
 
-#include "vertex.hpp"
 #include "chunk.hpp"
-#include "perlin.hpp"
-#include "shader.hpp"
-#include "noise.hpp"
-#include "utility.hpp"
+#include "fbm.hpp"
 
-#include "glad/glad.h"
-#include <GLFW/glfw3.h>
+#include "../events/terrain_parameter_event.hpp"
+#include "../events/event_manager.hpp"
 
-#include <iostream>
+
 #include <vector>
 #include <cstdlib>
-#include <unistd.h>
-
 
 class TerrainMesh {
 public:
-    explicit TerrainMesh(NoiseGenerator& gen,
-        size_t width, size_t height, const TerrainParams& params);
+    TerrainMesh(FBM& fbm, size_t width, size_t height);
 
-    TerrainMesh& operator=(const TerrainMesh&) = default;
+    ~TerrainMesh();
 
 public:
-	[[nodiscard]] const std::vector<Chunk>& get_chunks() const { return m_chunks; }
+    auto begin() { return m_chunks.begin(); }
+    auto end() { return m_chunks.end(); }
 
-    void reset(const TerrainParams& params);
-
+    auto cbegin() { return m_chunks.cbegin(); }
+    auto cend() { return m_chunks.cend(); }
 
 private:
-    std::vector<Chunk> generate_chunks(NoiseGenerator& gen, size_t width, size_t height);
+    void on_terrain_modify(Event &e); 
+
+private:
+    std::vector<Chunk> generate_chunks(size_t width, size_t height);
     
-public:
-    TerrainParams m_params;
+private:
     std::vector<Chunk> m_chunks;
+    FBM& m_fbm;
 };
 
 #endif /* TERRAIN_H */

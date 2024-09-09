@@ -1,27 +1,37 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#include <cstddef>
+#include "../events/window_events.hpp"
+#include "../events/mouse_event.hpp"
+#include "../events/key_events.hpp"
+#include "../events/event_manager.hpp"
 
-#include "../events/event.hpp"
-#include "../events/event_handler.hpp"
+#include <cstddef>
+#include <cassert>
+#include <functional>
+
+#include <GLFW/glfw3.h>
 
 class Window {
 public:
-    Window(size_t height, size_t width)
-        : m_height(height), m_width(width)
-        , event_handler()
-    { 
-        subscribe(Event::get_name(), event_handler);
-    }
+    Window(size_t width, size_t height, std::string_view window_name); 
 
-    void onEvent(Event& e); 
+    ~Window(); 
+
+    void on_window_resize(Event &e); 
+    void on_framebuffer_resize(Event &e);
+
+    GLFWwindow *get_window() const { return m_window; }
+
+    size_t width() const { return m_width; }
+    size_t height() const { return m_height; }
 
 private:
-    size_t m_height;
     size_t m_width;
+    size_t m_height;
 
-    EventHandlerWrapper<Event> event_handler;
+    GLFWwindow *m_window;
 };
 
 #endif /* WINDOW_HPP */
+

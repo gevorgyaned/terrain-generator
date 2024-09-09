@@ -5,8 +5,25 @@ glm::mat4 Camera::get_view_matrix() const
     return glm::lookAt(m_camera_pos, m_camera_pos + m_front, m_up);
 }
 
-void Camera::process_mouse(float x, float y)
+std::pair<float, float> Camera::process_mouse(float x, float y) 
 {
+    if (first_mouse) {
+        xpos = x;
+        ypos = y;
+        first_mouse = false;
+    }
+    auto res = std::make_pair(x - xpos, ypos - y); 
+    xpos = x;
+    ypos = y;
+    return res;
+}
+
+void Camera::on_mouse_move(Event &e)
+{
+    auto &move_event = static_cast<MouseMovedEvent&>(e);
+
+    auto [x, y] = process_mouse(move_event.mouse_x, move_event.mouse_y);
+
     x *= m_sensitivity;
     y *= m_sensitivity;
 
@@ -21,27 +38,41 @@ void Camera::process_mouse(float x, float y)
     update_vectors();
 }
 
-void Camera::process_keyboard(MoveDirection dir, float delta)
+void Camera::on_key_pressed([[maybe_unused]]Event &e)
+{
+    delta_time = glfwGetTime();
+}
+
+void Camera::on_key_released(Event &e)
+{
+    auto &key_event = static_cast<KeyReleasedEvent&>(e);
+    auto current = glfwGetTime();
+    process_keyboard(key_event.key, current - delta_time);
+}
+
+void Camera::process_keyboard(Key key, float delta)
 {
     float velocity = m_speed * delta;
-    switch (dir) {
-    case MoveDirection::Forward:
+    switch (key) {
+    case Key::W:
         m_camera_pos += m_front * velocity;
         break;
-    case MoveDirection::Backward:
+    case Key::S:
         m_camera_pos -= m_front * velocity;
         break;
-    case MoveDirection::Right:
+    case Key::D:
         m_camera_pos += m_right * velocity;
         break;
-    case MoveDirection::Left:
+    case Key::A:
         m_camera_pos -= m_right * velocity;
         break;
-    case MoveDirection::Up:
+    case Key::Q:
         m_camera_pos += m_up * velocity;
         break;
-    case MoveDirection::Down:
+    case Key::E:
         m_camera_pos -= m_up * velocity;
+        break;
+    default:
         break;
     }
 }

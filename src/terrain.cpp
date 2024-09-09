@@ -1,35 +1,40 @@
 #include "terrain.hpp"
 
-TerrainMesh::TerrainMesh(NoiseGenerator& gen, std::size_t width, std::size_t height, const TerrainParams& params)
-    : m_params{params} 
-    , m_chunks{generate_chunks(gen, width, height)}
-{ }
+TerrainMesh::TerrainMesh(FBM& fbm, size_t width, size_t height) : 
+    m_chunks(generate_chunks(width, height)), m_fbm(fbm)
+{
+    subscribe(TerrainModEvent::get_type_s(), 
+        std::make_unique<EventHandler<TerrainMesh>>(*this, &TerrainMesh::on_terrain_modify));
+}
 
-std::vector<Chunk> TerrainMesh::generate_chunks(NoiseGenerator& m_gen, size_t width, size_t height) 
+TerrainMesh::~TerrainMesh() {
+    unsubscribe(TerrainModEvent::get_type_s(), EventHandler<TerrainMesh>::get_type_s()); 
+}
+
+std::vector<Chunk> TerrainMesh::generate_chunks(size_t width, size_t height) 
 {
     std::vector<Chunk> chunks;
     chunks.reserve(width * height);
 
-    const float d = 0.1f * static_cast<float>(CHUNK_SIDE);
+    const float d = 0.1f * chunk_side;
 
     for (size_t i = 0; i < width; ++i) {
         for (size_t j = 0; j < height; ++j) {
             const auto pos = glm::dvec2(i, j);
             const auto offset = glm::vec2((float)i * d, (float)j * d);
-            chunks.emplace_back(m_gen, pos, offset, m_params);
+            chunks.emplace_back(m_fbm, pos, offset);
         }
     }
 
     return chunks;
 }
 
-void TerrainMesh::reset(const TerrainParams& params)
+void TerrainMesh::on_terrain_modify(Event &e) 
 {
-    if (params != m_params) {
-        m_params = params;
-
-        for (auto& chunk : m_chunks) {
-            chunk.regenerate(m_params);
+    if (e.get_type() == TerrainModEvent::get_type_s()) {
+        for (auto &chunk : m_chunks) {
+            chunk.update();
         }
     }
 }
+

@@ -1,7 +1,6 @@
 #ifndef PERLIN_H
 #define PERLIN_H
 
-#include "utility.hpp"
 #include "noise.hpp"
 
 #include <random>
@@ -32,7 +31,6 @@ private:
     const std::size_t m_size;
     std::vector<glm::vec2> m_gradients;
     double m_rand;
-
 };
 
 #endif /* PERLIN_H */

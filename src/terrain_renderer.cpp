@@ -1,17 +1,15 @@
 #include "terrain_renderer.hpp"
 
-TerrainRenderer::TerrainRenderer(TerrainMesh& terrain_mesh)
-    : m_terrain_mesh { terrain_mesh }
+TerrainRenderer::TerrainRenderer(TerrainMesh& terrain)
+    : m_terrain { terrain }
 { }
 
 void TerrainRenderer::draw(Shader& shader) const 
 {
 	shader.use();
 
-	const auto& chunks = m_terrain_mesh.get_chunks();
-
-	for (const auto& chunk : chunks) {
-		glBindVertexArray(chunk.get_VAO());
+	for (const auto& chunk : m_terrain) {
+		glBindVertexArray(chunk.VAO());
 		glDrawElements(GL_TRIANGLES, chunk.indicies_size(), GL_UNSIGNED_INT, 0);
 	}
 }

@@ -5,37 +5,34 @@
 
 #include <unordered_map>
 #include <deque>
-#include <memory>
 #include <cassert>
 #include <algorithm>
 #include <ranges>
 
 namespace rng = std::ranges;
 
-template <typename T>
-using UP = std::unique_ptr<T>;
-
 class EventManager {
 public:
-    void subscribe(std::string const &event_name, UP<IEventHandler> handler);
-    void unsubscribe(std::string const &event_name, std::string const &hanler_name);
+    void subscribe(std::string_view const &event_name, UP<IEventHandler> handler);
+    void unsubscribe(std::string_view const &event_name, std::string_view const &hanler_name);
 
     void add_event(UP<Event> event);
-    void trigger(Event &event);
     void dispatch_events();
 
 private:
+    void trigger(Event &event);
+
+private:
     std::deque<UP<Event>> _event_queue;
-    std::unordered_map<std::string, std::vector<UP<IEventHandler>>> _subscribers;
+    std::unordered_map<std::string_view, std::vector<UP<IEventHandler>>> _subscribers;
 };
 
 extern EventManager event_manager;
 
 /* function for gloabal EventManager entity */
-void subscribe(std::string const &event_name, UP<IEventHandler> handler);
-void unsubscribe(std::string const &event_name, std::string const &handler_name);
+void subscribe(std::string_view const &event_name, UP<IEventHandler> handler);
+void unsubscribe(std::string_view const &event_name, std::string_view const &handler_name);
 void add_event(UP<Event> event) ;
-void trigger(Event &e);
 
 #endif /* EVENT_MANAGER_HPP */
 

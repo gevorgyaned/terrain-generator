@@ -4,11 +4,9 @@
 #include "shader.hpp"
 #include "terrain.hpp"
 
-#include <glad/glad.h>
-
 class TerrainRenderer {
 public:
-    explicit TerrainRenderer(TerrainMesh& terrain_mesh);
+    TerrainRenderer(TerrainMesh& terrain);
 
 public:
     void draw(Shader& program) const;
@@ -17,7 +15,7 @@ public:
     { glPolygonMode(GL_FRONT_AND_BACK, mode); }
     
 private:
-    TerrainMesh& m_terrain_mesh;
+    TerrainMesh& m_terrain;
 };
 
 #endif /* TERRAIN_RENDERER_H */

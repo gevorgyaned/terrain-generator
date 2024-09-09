@@ -1,15 +1,16 @@
 #ifndef SHADER_H
 #define SHADER_H
 
-#include "glad/glad.h"
 #include <glm/gtc/type_ptr.hpp>
 
 #include <istream>
+#include <fstream>
 #include <variant>
 #include <string_view>
 #include <iostream>
 
-#include "utility.hpp"
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
 
 class Shader {
 public:
