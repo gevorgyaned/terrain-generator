@@ -8,7 +8,6 @@
 
 #include <cstddef>
 #include <cassert>
-#include <functional>
 
 #include <GLFW/glfw3.h>
 
@@ -20,11 +19,14 @@ public:
 
     void on_window_resize(Event &e); 
     void on_framebuffer_resize(Event &e);
+    void on_key_pressed(Event &e);
 
     GLFWwindow *get_window() const { return m_window; }
 
     size_t width() const { return m_width; }
     size_t height() const { return m_height; }
+
+    bool should_close() const;
 
 private:
     size_t m_width;

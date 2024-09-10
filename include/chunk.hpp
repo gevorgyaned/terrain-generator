@@ -5,6 +5,9 @@
 
 #include "vertex.hpp"
 #include "fbm.hpp"
+#include "drawable.hpp"
+#include "camera.hpp"
+#include "usings.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/glm.hpp>
@@ -18,9 +21,9 @@ namespace rng = std::ranges;
 
 constexpr size_t chunk_side = 16;
 
-class Chunk {
+class Chunk : public Drawable {
 public:
-    Chunk(FBM& fbm, const glm::dvec2& coords, const glm::vec2& begin);
+    Chunk(SP<FBM> fbm, const glm::dvec2& coords, const glm::vec2& begin);
     
     Chunk(Chunk&& other) = default;
 
@@ -28,10 +31,11 @@ public:
     GLuint VAO() const { return m_VAO; }
 
 	size_t indicies_size() const { return m_indicies.size(); }
-    bool is_visible(const glm::vec3& camera_coords,
-            const glm::vec3& euler_angles) const;
+    bool is_visible(Camera const &camera) const;
        
     void update();
+    void draw(SP<Shader> shader) const override;
+    std::string get_shader_name() const override { return "default"; }
 
 private:
     std::vector<Vertex> generate_vertices();
@@ -41,7 +45,7 @@ private:
     void set_normals(std::vector<Vertex> &vertices, std::vector<uint> const &indicies);
 
 public:
-    FBM& m_fbm;
+    SP<FBM> m_fbm;
 
     glm::vec2 m_begin_coords;
     glm::dvec2 m_position;
@@ -50,7 +54,6 @@ public:
 
     std::vector<uint> m_indicies;
     std::vector<Vertex> m_vertices;
-
 };
 
 #endif /* CHUNK_H */

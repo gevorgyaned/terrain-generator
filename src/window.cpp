@@ -1,13 +1,17 @@
 #include "window.hpp"
 
-Window::Window(size_t width, size_t height, std::string_view window_name) : 
-    m_width(width), m_height(height),
-    m_window(glfwCreateWindow(m_width, m_height, window_name.data(), NULL, NULL))
-{ 
-    assert(m_window != nullptr && "unable to create window");
+#include <iostream>
 
+Window::Window(size_t width, size_t height, std::string_view window_name) : 
+    m_width(width), m_height(height)
+{ 
+    std::cout << (void *)m_window << std::endl;
+    assert(m_window != nullptr);
     glfwMakeContextCurrent(m_window);
     subscribe(WindowResizeEvent::get_type_s(),
+        std::make_unique<EventHandler<Window>>(*this, &Window::on_window_resize)); 
+    
+    subscribe(KeyPressedEvent::get_type_s(),
         std::make_unique<EventHandler<Window>>(*this, &Window::on_window_resize)); 
 
     glfwSetFramebufferSizeCallback(m_window, 
@@ -40,6 +44,10 @@ Window::~Window() {
     glfwDestroyWindow(m_window);
 }
 
+bool Window::should_close() const {
+    return glfwWindowShouldClose(m_window);
+}
+
 void Window::on_window_resize(Event &e) {
     auto &resize_event = static_cast<WindowResizeEvent&>(e);
 
@@ -47,6 +55,15 @@ void Window::on_window_resize(Event &e) {
     m_height = resize_event.height;
 
     glfwSetWindowSize(m_window, m_width, m_height);
+}
+
+void Window::on_key_pressed(Event &e)
+{
+    auto &key_event = static_cast<KeyPressedEvent&>(e);
+
+    if (key_event.key == Key::Escape) {
+        glfwSetWindowShouldClose(m_window, true);
+    }
 }
 
 void Window::on_framebuffer_resize(Event &e) {

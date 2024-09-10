@@ -2,6 +2,7 @@
 #define TERRAIN_PARAMS_HPP
 
 #include "../events/key_events.hpp"
+#include "../events/terrain_mod_event.hpp"
 #include "../events/event_manager.hpp"
 
 class TerrainParams {
@@ -19,6 +20,7 @@ public:
         if (e.get_type() == KeyPressedEvent::get_type_s()) {
             auto &key_event = static_cast<KeyPressedEvent&>(e);
             process(key_event.key);
+            add_event(std::make_unique<TerrainModEvent>());
         }
     }
 

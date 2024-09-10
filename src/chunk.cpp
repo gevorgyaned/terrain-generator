@@ -1,6 +1,6 @@
 #include "chunk.hpp"
 
-Chunk::Chunk(FBM& fbm, const glm::dvec2& coords, const glm::vec2& begin) : 
+Chunk::Chunk(SP<FBM> fbm, const glm::dvec2& coords, const glm::vec2& begin) : 
     m_fbm(fbm), m_begin_coords(begin), m_position(coords), 
     m_indicies(generate_indicies()), m_vertices(generate_vertices())
 {
@@ -22,6 +22,12 @@ Chunk::Chunk(FBM& fbm, const glm::dvec2& coords, const glm::vec2& begin) :
 
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *)offsetof(Vertex, normal));
     glEnableVertexAttribArray(1);
+}
+
+void Chunk::draw(SP<Shader> shader) const
+{
+    glBindVertexArray(m_VAO);
+    glDrawElements(GL_TRIANGLES, m_indicies.size(), GL_UNSIGNED_INT, (void*)0);
 }
 
 void Chunk::update()
@@ -81,7 +87,7 @@ std::vector<Vertex> Chunk::generate_vertices()
             float mesh_y = i + chunk_side * m_position[1];
 
             heightmap.emplace_back(glm::vec3(
-                x_pos, m_fbm.generate(mesh_x, mesh_y), z_pos));
+                x_pos, m_fbm->generate(mesh_x, mesh_y), z_pos));
 
             x_pos += 0.1f;
         }

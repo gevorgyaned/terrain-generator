@@ -21,12 +21,10 @@ std::pair<float, float> Camera::process_mouse(float x, float y)
 void Camera::on_mouse_move(Event &e)
 {
     auto &move_event = static_cast<MouseMovedEvent&>(e);
-
     auto [x, y] = process_mouse(move_event.mouse_x, move_event.mouse_y);
 
     x *= m_sensitivity;
     y *= m_sensitivity;
-
     m_yaw   += x;
     m_pitch += y;
 

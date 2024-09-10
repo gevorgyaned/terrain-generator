@@ -13,7 +13,6 @@ add_executable(TerrainGeneration
     src/perlin.cpp
     src/shader.cpp
     src/camera.cpp
-    src/terrain_renderer.cpp
     src/chunk.cpp
     src/texture.cpp
     src/fbm.cpp

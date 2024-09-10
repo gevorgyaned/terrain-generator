@@ -1,6 +1,6 @@
 #include "terrain.hpp"
 
-TerrainMesh::TerrainMesh(FBM& fbm, size_t width, size_t height) : 
+TerrainMesh::TerrainMesh(SP<FBM> fbm, size_t width, size_t height) : 
     m_chunks(generate_chunks(width, height)), m_fbm(fbm)
 {
     subscribe(TerrainModEvent::get_type_s(), 
@@ -11,9 +11,16 @@ TerrainMesh::~TerrainMesh() {
     unsubscribe(TerrainModEvent::get_type_s(), EventHandler<TerrainMesh>::get_type_s()); 
 }
 
-std::vector<Chunk> TerrainMesh::generate_chunks(size_t width, size_t height) 
+void TerrainMesh::draw(SP<Shader> shader) const 
 {
-    std::vector<Chunk> chunks;
+    for (auto const &chunk : m_chunks) {
+        chunk->draw(shader); 
+    }
+}
+
+std::vector<UP<Chunk>> TerrainMesh::generate_chunks(size_t width, size_t height) 
+{
+    std::vector<UP<Chunk>> chunks;
     chunks.reserve(width * height);
 
     const float d = 0.1f * chunk_side;
@@ -22,7 +29,7 @@ std::vector<Chunk> TerrainMesh::generate_chunks(size_t width, size_t height)
         for (size_t j = 0; j < height; ++j) {
             const auto pos = glm::dvec2(i, j);
             const auto offset = glm::vec2((float)i * d, (float)j * d);
-            chunks.emplace_back(m_fbm, pos, offset);
+            chunks.emplace_back(make_unique<Chunk>(m_fbm, pos, offset));
         }
     }
 
@@ -31,10 +38,15 @@ std::vector<Chunk> TerrainMesh::generate_chunks(size_t width, size_t height)
 
 void TerrainMesh::on_terrain_modify(Event &e) 
 {
-    if (e.get_type() == TerrainModEvent::get_type_s()) {
+    m_is_modified = true;
+}
+
+void TerrainMesh::update()
+{
+    if (m_is_modified) {
         for (auto &chunk : m_chunks) {
-            chunk.update();
-        }
+            chunk->update();
+        } 
     }
 }
 
