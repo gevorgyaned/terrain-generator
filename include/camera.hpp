@@ -40,7 +40,7 @@ public:
     glm::mat4 get_view_matrix() const;
 
     glm::vec3 get_position() const;
-    std::pair<float, float> process_mouse(float x, float y);
+    void process_mouse(float x, float y);
     void process_keyboard(Key key, float delta_time);
 
 private:
@@ -52,13 +52,13 @@ private:
 	glm::vec3 m_front;
     glm::vec3 m_right;
 
-    float m_yaw;
-    float m_pitch;
-    float m_sensitivity;
-    float m_speed;
+    float m_yaw { -90.f };
+    float m_pitch { 0.0f };
+    float m_sensitivity { 0.1f };
+    float m_speed { 0.05f };
 
-    float xpos;
-    float ypos;
+    float xpos { 400.f };
+    float ypos { 300.f };
     
     float delta_time { 0.0f };
 

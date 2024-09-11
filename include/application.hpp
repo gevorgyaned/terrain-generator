@@ -14,6 +14,7 @@
 #include "terrain.hpp"
 #include "drawable.hpp"
 #include "usings.hpp"
+#include "cube.hpp"
 
 #include <iostream>
 #include <set>
@@ -22,21 +23,26 @@ extern EventManager event_manager;
 
 class Application {
 public:
-    Application(Window &&window, Camera const &camera);
+    Application(std::string_view name, size_t width, size_t height, Camera const &camera);
 
     void run();
     void update();
     void draw();
 
+    void insert_shader(std::string const &shader_name, Shader shader)
+    {
+        m_shaders.emplace(shader_name, shader);
+    }
+
 private:
     void set_shaders();
 
-private:
+public:
     Window m_window;
     Camera m_camera;
 
-    std::unordered_map<std::string, SP<Shader>> m_shaders; 
-    std::set<UP<Drawable>> m_meshes;
+    std::unordered_map<std::string, Shader> m_shaders; 
+    std::vector<UP<Drawable>> m_meshes;
 
     float last_time { 0.0f };
     float fps_hint { 60.0f };

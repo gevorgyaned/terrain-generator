@@ -28,9 +28,13 @@ public:
 
     bool should_close() const;
 
+    void create_window();
+    void setup();
+
 private:
     size_t m_width;
     size_t m_height;
+    std::string_view m_name;
 
     GLFWwindow *m_window;
 };

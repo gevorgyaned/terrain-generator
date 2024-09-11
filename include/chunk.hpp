@@ -34,7 +34,7 @@ public:
     bool is_visible(Camera const &camera) const;
        
     void update();
-    void draw(SP<Shader> shader) const override;
+    void draw(Shader shader) const override;
     std::string get_shader_name() const override { return "default"; }
 
 private:

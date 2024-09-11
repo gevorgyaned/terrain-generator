@@ -26,8 +26,11 @@ public:
     Shader& set_matrix4(const glm::mat4&, std::string_view name);
     Shader& set_matrix3(const glm::mat3&, std::string_view name);
 
+    Shader(Shader const &) = default;
+    Shader() = default;
+
+    Shader(const GLuint program_id) : m_id { program_id } { }
 private:
-    explicit Shader(const GLuint program_id) : m_id { program_id } { }
 
 private:
     static std::variant<GLuint, std::string> compile_shader(const std::string&, GLenum shader_type);

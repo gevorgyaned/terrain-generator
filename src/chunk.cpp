@@ -24,8 +24,9 @@ Chunk::Chunk(SP<FBM> fbm, const glm::dvec2& coords, const glm::vec2& begin) :
     glEnableVertexAttribArray(1);
 }
 
-void Chunk::draw(SP<Shader> shader) const
+void Chunk::draw(Shader shader) const
 {
+    shader.use();
     glBindVertexArray(m_VAO);
     glDrawElements(GL_TRIANGLES, m_indicies.size(), GL_UNSIGNED_INT, (void*)0);
 }

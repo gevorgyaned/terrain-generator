@@ -11,7 +11,7 @@ TerrainMesh::~TerrainMesh() {
     unsubscribe(TerrainModEvent::get_type_s(), EventHandler<TerrainMesh>::get_type_s()); 
 }
 
-void TerrainMesh::draw(SP<Shader> shader) const 
+void TerrainMesh::draw(Shader shader) const 
 {
     for (auto const &chunk : m_chunks) {
         chunk->draw(shader); 

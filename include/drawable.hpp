@@ -8,7 +8,7 @@ class Drawable {
 public:
     virtual ~Drawable() = default;
 
-    virtual void draw(SP<Shader> shader) const = 0;
+    virtual void draw(Shader shader) const = 0;
 
     virtual std::string get_shader_name() const = 0;
 };

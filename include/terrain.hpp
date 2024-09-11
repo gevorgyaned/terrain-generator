@@ -26,7 +26,7 @@ public:
     auto cbegin() { return m_chunks.cbegin(); }
     auto cend() { return m_chunks.cend(); }
 
-    void draw(SP<Shader> shader) const override;
+    void draw(Shader shader) const override;
     std::string get_shader_name() const override { return "terrain_mesh"; }
 
     void update();

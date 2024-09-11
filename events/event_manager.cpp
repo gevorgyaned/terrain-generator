@@ -1,5 +1,7 @@
 #include "event_manager.hpp"
 
+#include <iostream>
+
 void subscribe(std::string_view const &event_name, UP<IEventHandler> handler)
 {
     event_manager.subscribe(event_name, std::move(handler));

@@ -1,19 +1,33 @@
 #include "window.hpp"
 
-#include <iostream>
-
 Window::Window(size_t width, size_t height, std::string_view window_name) : 
-    m_width(width), m_height(height)
+    m_width(width), m_height(height), m_name(window_name)
 { 
-    std::cout << (void *)m_window << std::endl;
-    assert(m_window != nullptr);
-    glfwMakeContextCurrent(m_window);
     subscribe(WindowResizeEvent::get_type_s(),
         std::make_unique<EventHandler<Window>>(*this, &Window::on_window_resize)); 
     
     subscribe(KeyPressedEvent::get_type_s(),
-        std::make_unique<EventHandler<Window>>(*this, &Window::on_window_resize)); 
+        std::make_unique<EventHandler<Window>>(*this, &Window::on_key_pressed)); 
+}
 
+Window::~Window() {
+    unsubscribe(WindowResizeEvent::get_type_s(), 
+        EventHandler<Window>::get_type_s());
+
+    glfwDestroyWindow(m_window);
+}
+
+bool Window::should_close() const {
+    return glfwWindowShouldClose(m_window);
+}
+
+void Window::create_window()
+{
+    m_window = glfwCreateWindow(m_width, m_height, m_name.data(), NULL, NULL);
+}
+
+void Window::setup()
+{
     glfwSetFramebufferSizeCallback(m_window, 
     []([[maybe_unused]] GLFWwindow *window, int height, int width) { 
         add_event(std::make_unique<FramebufferResizeEvent>(width, height));
@@ -35,17 +49,6 @@ Window::Window(size_t width, size_t height, std::string_view window_name) :
 
 	glfwSwapInterval(1);
     glfwSetInputMode(m_window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-}
-
-Window::~Window() {
-    unsubscribe(WindowResizeEvent::get_type_s(), 
-        EventHandler<Window>::get_type_s());
-
-    glfwDestroyWindow(m_window);
-}
-
-bool Window::should_close() const {
-    return glfwWindowShouldClose(m_window);
 }
 
 void Window::on_window_resize(Event &e) {

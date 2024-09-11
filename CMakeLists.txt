@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(TerrainGeneration VERSION 1.0)
 
-add_compile_options(-g -Wall -Wextra)
+add_compile_options(-g -Wall -Wextra -O3)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -16,6 +16,7 @@ add_executable(TerrainGeneration
     src/chunk.cpp
     src/texture.cpp
     src/fbm.cpp
+    src/cube.cpp
     src/application.cpp
     src/window.cpp
     src/main.cpp
