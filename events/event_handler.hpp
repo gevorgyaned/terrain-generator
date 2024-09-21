@@ -2,9 +2,7 @@
 #define EVENT_HANDLER_HPP
 
 #include "event.hpp"
-
-template <typename T>
-using UP = std::unique_ptr<T>;
+#include "usings.hpp"
 
 class IEventHandler {
 public:

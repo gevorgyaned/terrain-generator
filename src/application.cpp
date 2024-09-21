@@ -1,12 +1,11 @@
 #include "application.hpp"
-
-#include <cmath>
+#include "terrain_mod_event.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
 
-Application::Application(std::string_view name, size_t width, size_t height, Camera const &camera) :
-    m_window(width, height, name), m_camera(camera)
+Application::Application(std::string_view name, size_t width, size_t height) :
+    m_window(width, height, name)
 { 
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -26,9 +25,8 @@ Application::Application(std::string_view name, size_t width, size_t height, Cam
     }
 
     m_window.setup();
-
+    input = UserInput(m_window.get_window());
     glEnable(GL_DEPTH_TEST);
-    //enable_optimizations();
 }
 
 void Application::set_shaders()
@@ -69,26 +67,44 @@ void Application::run()
     shader.set_matrix4(glm::perspective(glm::radians(45.0f), 
         m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
 
+    PerlinNoise noise;
+    FBM fbm(noise, TerrainParams{});
+    TerrainMesh mesh(fbm, 4, 4);
+    Camera camera;
+
+    float last_time {};
+    float current {};
+
     while (!m_window.should_close()) {
         glClearColor(.0f, 0.5f, 0.2f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        current = glfwGetTime();
+        float delta_time = current - last_time;
+        last_time = current;
+
         shader.use();
 
-        shader.set_matrix4(m_camera.get_view_matrix(), "view");
-        std::cout << glm::to_string(m_camera.get_view_matrix()) << std::endl;
-        shader.set_float3(m_camera.get_position(), "u_camera_location");
-        shader.set_float3(m_camera.get_position(), "u_light_location");
+        shader.set_matrix4(camera.get_view_matrix(), "view");
+        shader.set_float3(camera.get_position(), "u_camera_location");
+        shader.set_float3(camera.get_position(), "u_light_location");
         shader.set_float3({1.f, 1.f, 1.f}, "u_light_color");
         shader.set_float3({1.0f, 0.0f, 0.0f}, "u_target_color");
         glm::mat4 model(1.0f);
 
-        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 3.0f * -abs(cos(glfwGetTime()))));
-        shader.set_matrix4(model, "model");
-
         event_manager.dispatch_events();
 
+        mesh.update();
+
+        shader.set_matrix4(model, "model");
         cube.draw(shader);
+
+        shader.use();
+        shader.set_float3({0.0f, 0.31f, 0.42f}, "u_target_color");
+        mesh.draw(shader);
+
+        camera.process_keyboard(input, delta_time);
+
         glfwSwapBuffers(m_window.get_window());
         glfwPollEvents();
     } 

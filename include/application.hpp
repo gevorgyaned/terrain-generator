@@ -15,7 +15,9 @@
 #include "drawable.hpp"
 #include "usings.hpp"
 #include "cube.hpp"
+#include "perlin.hpp"
 
+#include <cmath>
 #include <iostream>
 #include <set>
 
@@ -23,7 +25,7 @@ extern EventManager event_manager;
 
 class Application {
 public:
-    Application(std::string_view name, size_t width, size_t height, Camera const &camera);
+    Application(std::string_view name, size_t width, size_t height);
 
     void run();
     void update();
@@ -40,6 +42,8 @@ private:
 public:
     Window m_window;
     Camera m_camera;
+
+    UserInput input;
 
     std::unordered_map<std::string, Shader> m_shaders; 
     std::vector<UP<Drawable>> m_meshes;

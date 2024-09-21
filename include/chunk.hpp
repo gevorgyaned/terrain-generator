@@ -23,7 +23,7 @@ constexpr size_t chunk_side = 16;
 
 class Chunk : public Drawable {
 public:
-    Chunk(SP<FBM> fbm, const glm::dvec2& coords, const glm::vec2& begin);
+    Chunk(FBM &fbm, const glm::dvec2& coords, const glm::vec2& begin);
     
     Chunk(Chunk&& other) = default;
 
@@ -35,7 +35,7 @@ public:
        
     void update();
     void draw(Shader shader) const override;
-    std::string get_shader_name() const override { return "default"; }
+    std::string get_shader_name() const override { return "terrain_mesh"; }
 
 private:
     std::vector<Vertex> generate_vertices();
@@ -45,7 +45,7 @@ private:
     void set_normals(std::vector<Vertex> &vertices, std::vector<uint> const &indicies);
 
 public:
-    SP<FBM> m_fbm;
+    FBM &m_fbm;
 
     glm::vec2 m_begin_coords;
     glm::dvec2 m_position;

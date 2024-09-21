@@ -57,12 +57,10 @@ void EventManager::trigger(Event &event)
 
 void EventManager::dispatch_events()
 {
-    while (!_event_queue.empty()) {
-        auto &event = _event_queue.front();
-        
+    for (auto &event : _event_queue) {
         trigger(*event);
-
-        _event_queue.pop_front();
     }
+    
+    _event_queue.clear();
 }
 

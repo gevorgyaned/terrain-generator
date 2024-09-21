@@ -5,6 +5,7 @@
 
 #include <unordered_map>
 #include <deque>
+#include <vector>
 #include <cassert>
 #include <algorithm>
 #include <ranges>
@@ -23,7 +24,7 @@ private:
     void trigger(Event &event);
 
 private:
-    std::deque<UP<Event>> _event_queue;
+    std::vector<UP<Event>> _event_queue;
     std::unordered_map<std::string_view, std::vector<UP<IEventHandler>>> _subscribers;
 };
 

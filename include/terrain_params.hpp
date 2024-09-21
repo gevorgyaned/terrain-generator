@@ -7,9 +7,7 @@
 
 class TerrainParams {
 public:
-    TerrainParams(float amplitude, float lacunarity, float gain, float frequency, int octaves) : 
-        m_amplitude(amplitude), m_lacunarity(lacunarity), m_gain(gain),
-        m_frequency(frequency), m_octaves(octaves)
+    TerrainParams()
     { 
         subscribe(KeyPressedEvent::get_type_s(), 
             std::make_unique<EventHandler<TerrainParams>>(*this, &TerrainParams::on_key_pressed));
@@ -17,43 +15,40 @@ public:
 
     void on_key_pressed(Event &e)
     {
-        if (e.get_type() == KeyPressedEvent::get_type_s()) {
-            auto &key_event = static_cast<KeyPressedEvent&>(e);
-            process(key_event.key);
-            add_event(std::make_unique<TerrainModEvent>());
-        }
+        auto &key_event = static_cast<KeyPressedEvent&>(e);
+        process(key_event.key);
     }
 
     void process(Key key)
     {
         switch (key) {
-            case Key::J: 
-                modify_param(-1); 
-                break; 
-            case Key::K: 
-                modify_param(1); 
-                break;
-            case Key::Key1: 
-                current = ampl; 
-                break;
-            case Key::Key2: 
-                current = freq; 
-                break;
-            case Key::Key3: 
-                current = lacun; 
-                break;
-            case Key::Key4: 
-                current = gain; 
-                break;
-            case Key::Key5: 
-                current = octaves; 
-                break;
-            default: break;
-        };
+        case Key::K:
+            modify_param(-1);
+            add_event(std::make_unique<TerrainModEvent>());
+            break;
+        case Key::J:
+            modify_param(1);
+            add_event(std::make_unique<TerrainModEvent>());
+            break;
+        case Key::Key1:
+            current = ampl;
+            break;
+        case Key::Key2:
+            current = freq;
+            break;
+        case Key::Key3:
+            current = gain;
+            break;
+        case Key::Key4:
+            current = lacun;
+            break;
+        case Key::Key5:
+            current = octaves;
+            break;
+        default: 
+            break;
+        }
     }
-
-private:
-    enum Param { ampl, freq, lacun, gain, octaves } current;
 
 private:
     void modify_param(float sign) {
@@ -71,17 +66,20 @@ private:
             m_gain += 0.1f * sign;
             break;
         case octaves:
-            m_octaves += sign;
+            m_octaves += (int)sign;
             break;
         }
     }
 
 private:
-    float m_amplitude;
-    float m_lacunarity;
-    float m_gain;
-    float m_frequency;
-    int m_octaves;
+    enum Param { ampl, freq, lacun, gain, octaves } current = ampl;
+
+public:
+    float m_amplitude { 2.0f };
+    float m_lacunarity { 2.2f };
+    float m_gain { 0.5f };
+    float m_frequency { 0.5f };
+    int m_octaves { 12 };
 };
 
 #endif /* TERRAIN_PARAMS_HPP */

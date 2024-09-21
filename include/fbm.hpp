@@ -4,19 +4,18 @@
 #include "noise.hpp"
 #include "terrain_params.hpp"
 
-#include <memory>
-
 class FBM {
 public:
-    FBM(std::shared_ptr<NoiseGenerator> noise, std::shared_ptr<TerrainParams> params)
+    FBM(NoiseGenerator &noise, TerrainParams const &params)
         : m_noise(noise), m_params(params)
-    { }
+    { 
+    }
 
     float generate(float x, float y) const;
 
 private:
-    std::shared_ptr<NoiseGenerator> m_noise;
-    std::shared_ptr<TerrainParams> m_params;
+    NoiseGenerator &m_noise;
+    TerrainParams m_params;
 };
 
 #endif /* FBM_HPP */

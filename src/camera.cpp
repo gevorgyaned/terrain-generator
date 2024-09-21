@@ -41,53 +41,31 @@ void Camera::on_mouse_move(Event &e)
     process_mouse(xoffset, yoffset);
 }
 
-void Camera::on_key_pressed(Event &e)
-{
-    auto &key_event = static_cast<KeyPressedEvent&>(e);
-    auto key = key_event.key;
-
-    if (key == Key::W || key == Key::A || key == Key::S || key == Key::D)
-        delta_time = glfwGetTime();
-}
-
-void Camera::on_key_released(Event &e)
-{
-    auto &key_event = static_cast<KeyReleasedEvent&>(e);
-    auto current = glfwGetTime();
-    process_keyboard(key_event.key, current - delta_time);
-    delta_time = current;
-}
-
-void Camera::process_keyboard(Key key, float delta)
+void Camera::process_keyboard(UserInput input, float delta)
 {
     float velocity = m_speed * delta;
-    switch (key) {
-    case Key::W:
+    if (input.is_key_pressed(Key::W)) {
         m_camera_pos += m_front * velocity;
-        break;
-    case Key::S:
+    } 
+    if (input.is_key_pressed(Key::S)) {
         m_camera_pos -= m_front * velocity;
-        break;
-    case Key::D:
+    }
+    if (input.is_key_pressed(Key::D)) {
         m_camera_pos += m_right * velocity;
-        break;
-    case Key::A:
+    }
+    if (input.is_key_pressed(Key::A)) {
         m_camera_pos -= m_right * velocity;
-        break;
-    case Key::Q:
+    }
+    if (input.is_key_pressed(Key::Q)) {
         m_camera_pos += m_up * velocity;
-        break;
-    case Key::E:
+    }
+    if (input.is_key_pressed(Key::E)) {
         m_camera_pos -= m_up * velocity;
-        break;
-    default:
-        break;
     }
 }
 
 void Camera::update_vectors()
 {
-    std::cout << __func__ << std::endl;
     glm::vec3 tmp;
     tmp.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
     tmp.y = sin(glm::radians(m_pitch));
@@ -96,8 +74,6 @@ void Camera::update_vectors()
     m_front = glm::normalize(tmp);
     m_right = glm::normalize(glm::cross(m_front, glm::vec3(0.0f, 1.0f, 0.0f)));
     m_up    = glm::normalize(glm::cross(m_right, m_front));   
-
-    std::cout << "m_front" << glm::to_string(m_front) << std::endl;
 }
 
 glm::vec3 Camera::get_position() const { return m_camera_pos; }

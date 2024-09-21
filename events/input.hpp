@@ -7,7 +7,7 @@
 
 class UserInput {
 public:
-    UserInput(GLFWwindow *window) : _window{window} {}
+    UserInput(GLFWwindow *window = nullptr) : _window{window} {}
 
     bool is_key_pressed(Key key) {
         return glfwGetKey(_window, static_cast<GLenum>(key)) == GLFW_PRESS; 

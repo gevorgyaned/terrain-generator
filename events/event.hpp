@@ -1,6 +1,7 @@
 #ifndef EVENT_HPP
 #define EVENT_HPP
 
+#include <typeinfo>
 #include <string_view>
 
 #define EVENT_TYPE(type)\

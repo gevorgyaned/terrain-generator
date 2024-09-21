@@ -1,5 +1,8 @@
 #include "window.hpp"
 
+#include <GLFW/glfw3.h>
+#include <iostream>
+
 Window::Window(size_t width, size_t height, std::string_view window_name) : 
     m_width(width), m_height(height), m_name(window_name)
 { 
@@ -12,6 +15,9 @@ Window::Window(size_t width, size_t height, std::string_view window_name) :
 
 Window::~Window() {
     unsubscribe(WindowResizeEvent::get_type_s(), 
+        EventHandler<Window>::get_type_s());
+
+    unsubscribe(KeyPressedEvent::get_type_s(), 
         EventHandler<Window>::get_type_s());
 
     glfwDestroyWindow(m_window);
@@ -42,9 +48,9 @@ void Window::setup()
     []([[maybe_unused]]GLFWwindow *window, int keycode, [[maybe_unused]] int scancode, int action, [[maybe_unused]] int mode) {
         if (action == GLFW_PRESS) {
             add_event(std::make_unique<KeyPressedEvent>(static_cast<Key>(keycode)));
-        } else {
+        } else if (action == GLFW_RELEASE) {
             add_event(std::make_unique<KeyReleasedEvent>(static_cast<Key>(keycode)));
-        }
+        } 
     });    
 
 	glfwSwapInterval(1);
@@ -64,7 +70,7 @@ void Window::on_key_pressed(Event &e)
 {
     auto &key_event = static_cast<KeyPressedEvent&>(e);
 
-    if (key_event.key == Key::Escape) {
+    if (key_event.key == Key::X) {
         glfwSetWindowShouldClose(m_window, true);
     }
 }

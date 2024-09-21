@@ -5,7 +5,7 @@
 
 #include "../events/event_manager.hpp"
 #include "../events/mouse_event.hpp"
-#include "../events/key_events.hpp"
+#include "../events/input.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -28,20 +28,16 @@ public:
         m_pitch (pitch), m_sensitivity (0.1f), m_speed (3.0f)
 	{  
         subscribe(MouseMovedEvent::get_type_s(), std::make_unique<EventHandler<Camera>>(*this, &Camera::on_mouse_move));
-        subscribe(KeyPressedEvent::get_type_s(), std::make_unique<EventHandler<Camera>>(*this, &Camera::on_key_pressed));
-        subscribe(KeyReleasedEvent::get_type_s(), std::make_unique<EventHandler<Camera>>(*this, &Camera::on_key_released));
         update_vectors(); 
     }
 
     void on_mouse_move(Event &e);
-    void on_key_pressed(Event &e);
-    void on_key_released(Event &e);
 
     glm::mat4 get_view_matrix() const;
 
     glm::vec3 get_position() const;
     void process_mouse(float x, float y);
-    void process_keyboard(Key key, float delta_time);
+    void process_keyboard(UserInput input, float delta_time);
 
 private:
     void update_vectors();
