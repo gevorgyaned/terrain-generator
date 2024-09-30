@@ -6,8 +6,8 @@
 
 class FBM {
 public:
-    FBM(NoiseGenerator &noise, TerrainParams const &params)
-        : m_noise(noise), m_params(params)
+    FBM(NoiseGenerator &noise)
+        : m_noise(noise)
     { 
     }
 

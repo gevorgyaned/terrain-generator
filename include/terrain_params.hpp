@@ -2,7 +2,6 @@
 #define TERRAIN_PARAMS_HPP
 
 #include "../events/key_events.hpp"
-#include "../events/terrain_mod_event.hpp"
 #include "../events/event_manager.hpp"
 
 class TerrainParams {
@@ -24,11 +23,9 @@ public:
         switch (key) {
         case Key::K:
             modify_param(-1);
-            add_event(std::make_unique<TerrainModEvent>());
             break;
         case Key::J:
             modify_param(1);
-            add_event(std::make_unique<TerrainModEvent>());
             break;
         case Key::Key1:
             current = ampl;
@@ -69,6 +66,8 @@ private:
             m_octaves += (int)sign;
             break;
         }
+
+        std::printf("ampl - %f, lacun - %f, freq - %f, gain - %f\n", m_amplitude, m_lacunarity, m_frequency, m_gain);
     }
 
 private:

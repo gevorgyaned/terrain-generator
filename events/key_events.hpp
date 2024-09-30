@@ -18,6 +18,8 @@ public:
 
     EVENT_TYPE(KeyPressedEvent)
 
+    std::string print() override { return std::to_string((int)key) + " KeyPressedEvent"; }
+
 private:
     const std::string_view m_name;
 };

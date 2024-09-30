@@ -1,14 +1,14 @@
 #include "terrain.hpp"
 
-TerrainMesh::TerrainMesh(FBM &fbm, size_t width, size_t height) : 
+TerrainMesh::TerrainMesh(std::shared_ptr<FBM> fbm, size_t width, size_t height) : 
      m_fbm(fbm), m_chunks(generate_chunks(width, height))
 {
-    subscribe(TerrainModEvent::get_type_s(),
+    subscribe(KeyPressedEvent::get_type_s(),
         std::make_unique<EventHandler<TerrainMesh>>(*this, &TerrainMesh::on_terrain_modify));
 }
 
 TerrainMesh::~TerrainMesh() {
-    unsubscribe(TerrainModEvent::get_type_s(), EventHandler<TerrainMesh>::get_type_s()); 
+    unsubscribe(KeyPressedEvent::get_type_s(), EventHandler<TerrainMesh>::get_type_s());
 }
 
 void TerrainMesh::draw(Shader shader) const 
@@ -39,7 +39,7 @@ std::vector<Chunk> TerrainMesh::generate_chunks(size_t width, size_t height)
 void TerrainMesh::update()
 {
     if (m_is_modified) {
-        std::cout << "modified\n";
+        std::cout << "-------------------------------modified\n";
         for (auto &chunk : m_chunks) {
             chunk.update();
         } 

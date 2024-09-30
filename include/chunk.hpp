@@ -23,7 +23,7 @@ constexpr size_t chunk_side = 16;
 
 class Chunk : public Drawable {
 public:
-    Chunk(FBM &fbm, const glm::dvec2& coords, const glm::vec2& begin);
+    Chunk(std::shared_ptr<FBM> fbm, const glm::dvec2& coords, const glm::vec2& begin);
     
     Chunk(Chunk&& other) = default;
 
@@ -45,7 +45,7 @@ private:
     void set_normals(std::vector<Vertex> &vertices, std::vector<uint> const &indicies);
 
 public:
-    FBM &m_fbm;
+    std::shared_ptr<FBM> m_fbm;
 
     glm::vec2 m_begin_coords;
     glm::dvec2 m_position;

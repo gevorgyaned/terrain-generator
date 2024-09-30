@@ -41,7 +41,6 @@ private:
 
 public:
     Window m_window;
-    Camera m_camera;
 
     UserInput input;
 

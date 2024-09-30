@@ -1,5 +1,5 @@
 #include "application.hpp"
-#include "terrain_mod_event.hpp"
+#include "event_manager.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
@@ -31,15 +31,15 @@ Application::Application(std::string_view name, size_t width, size_t height) :
 
 void Application::set_shaders()
 {
-    for (auto &&[_name, shader] : m_shaders) {
-        shader.use();
-        shader.set_matrix4(m_camera.get_view_matrix(), "view");
-        shader.set_matrix4(glm::perspective(glm::radians(45.0f), 
-            m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
-        shader.set_float3(m_camera.get_position(), "u_camera_location");
-        shader.set_float3(m_camera.get_position(), "u_light_location");
-        shader.set_float3({1.f, 1.f, 1.f}, "u_light_color");
-    }
+    //for (auto &&[_name, shader] : m_shaders) {
+    //    shader.use();
+    //    shader.set_matrix4(m_camera.get_view_matrix(), "view");
+    //    shader.set_matrix4(glm::perspective(glm::radians(45.0f), 
+    //        m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
+    //    shader.set_float3(m_camera.get_position(), "u_camera_location");
+    //    shader.set_float3(m_camera.get_position(), "u_light_location");
+    //    shader.set_float3({1.f, 1.f, 1.f}, "u_light_color");
+    //}
 }
 
 void enable_optimizations()
@@ -53,6 +53,7 @@ void enable_optimizations()
 
 void Application::run()
 {
+    Camera camera;
     Cube cube;
 
     auto shader_res = Shader::create("shaders/vert.glsl", "shaders/frag.glsl");
@@ -68,9 +69,9 @@ void Application::run()
         m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
 
     PerlinNoise noise;
-    FBM fbm(noise, TerrainParams{});
+    auto fbm = std::make_shared<FBM>(noise);
+
     TerrainMesh mesh(fbm, 4, 4);
-    Camera camera;
 
     float last_time {};
     float current {};
@@ -122,18 +123,18 @@ void Application::draw()
 
 void Application::update()
 {
-    auto &shader = m_shaders.at("terrain_mesh");
-    shader.use();
-    shader.set_matrix4(m_camera.get_view_matrix(), "view");
-    shader.set_matrix4(glm::perspective(glm::radians(45.0f), 
-        m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
-    shader.set_float3(m_camera.get_position(), "u_camera_location");
-    shader.set_float3(m_camera.get_position(), "u_light_location");
-    shader.set_float3({1.f, 1.f, 1.f}, "u_light_color");
+    //auto &shader = m_shaders.at("terrain_mesh");
+    //shader.use();
+    //shader.set_matrix4(m_camera.get_view_matrix(), "view");
+    //shader.set_matrix4(glm::perspective(glm::radians(45.0f), 
+    //    m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
+    //shader.set_float3(m_camera.get_position(), "u_camera_location");
+    //shader.set_float3(m_camera.get_position(), "u_light_location");
+    //shader.set_float3({1.f, 1.f, 1.f}, "u_light_color");
 
-    shader.set_float3({1.0f, 0.0f, 0.0f}, "u_target_color");
-    auto *ptr = m_meshes[0].get();
+    //shader.set_float3({1.0f, 0.0f, 0.0f}, "u_target_color");
+    //auto *ptr = m_meshes[0].get();
 
-    shader.set_matrix4(static_cast<Cube *>(ptr)->model, "model");
+    //shader.set_matrix4(static_cast<Cube *>(ptr)->model, "model");
 }
 
