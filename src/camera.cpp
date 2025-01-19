@@ -43,7 +43,6 @@ void Camera::on_mouse_move(Event &e)
 
 void Camera::process_keyboard(UserInput input, float delta)
 {
-    std::cout << glm::to_string(m_camera_pos) << std::endl;
     float velocity = m_speed * delta;
     if (input.is_key_pressed(Key::W)) {
         m_camera_pos += m_front * velocity;

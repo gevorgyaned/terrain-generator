@@ -35,5 +35,5 @@ target_include_directories(TerrainGeneration PRIVATE
 
 add_link_options(-fsanitize=address) 
 
-target_link_libraries(TerrainGeneration PRIVATE glfw) 
+target_link_libraries(TerrainGeneration PRIVATE glfw)
 

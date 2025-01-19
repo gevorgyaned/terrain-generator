@@ -10,7 +10,7 @@
 
 #include "camera.hpp"
 #include "window.hpp"
-#include "shader.hpp"
+#include "shader.hpp" 
 #include "terrain.hpp"
 #include "drawable.hpp"
 #include "usings.hpp"
@@ -31,10 +31,7 @@ public:
     void update();
     void draw();
 
-    void insert_shader(std::string const &shader_name, Shader shader)
-    {
-        m_shaders.emplace(shader_name, shader);
-    }
+    void insert_shader(std::string const &shader_name, Shader shader);
 
 private:
     void set_shaders();
@@ -43,6 +40,8 @@ public:
     Window m_window;
 
     UserInput input;
+
+    Camera m_camera;
 
     std::unordered_map<std::string, Shader> m_shaders; 
     std::vector<UP<Drawable>> m_meshes;

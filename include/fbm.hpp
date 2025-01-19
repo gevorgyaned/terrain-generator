@@ -6,7 +6,7 @@
 
 class FBM {
 public:
-    FBM(NoiseGenerator &noise)
+    FBM(std::shared_ptr<NoiseGenerator> noise)
         : m_noise(noise)
     { 
     }
@@ -14,7 +14,7 @@ public:
     float generate(float x, float y) const;
 
 private:
-    NoiseGenerator &m_noise;
+    std::shared_ptr<NoiseGenerator> m_noise;
     TerrainParams m_params;
 };
 

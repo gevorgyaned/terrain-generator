@@ -39,7 +39,6 @@ std::vector<Chunk> TerrainMesh::generate_chunks(size_t width, size_t height)
 void TerrainMesh::update()
 {
     if (m_is_modified) {
-        std::cout << "-------------------------------modified\n";
         for (auto &chunk : m_chunks) {
             chunk.update();
         } 

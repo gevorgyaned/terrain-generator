@@ -1,5 +1,6 @@
 #include "application.hpp"
 #include "event_manager.hpp"
+#include "fbm.hpp"
 
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/string_cast.hpp>
@@ -29,19 +30,6 @@ Application::Application(std::string_view name, size_t width, size_t height) :
     glEnable(GL_DEPTH_TEST);
 }
 
-void Application::set_shaders()
-{
-    //for (auto &&[_name, shader] : m_shaders) {
-    //    shader.use();
-    //    shader.set_matrix4(m_camera.get_view_matrix(), "view");
-    //    shader.set_matrix4(glm::perspective(glm::radians(45.0f), 
-    //        m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
-    //    shader.set_float3(m_camera.get_position(), "u_camera_location");
-    //    shader.set_float3(m_camera.get_position(), "u_light_location");
-    //    shader.set_float3({1.f, 1.f, 1.f}, "u_light_color");
-    //}
-}
-
 void enable_optimizations()
 {
     glEnable(GL_CULL_FACE);
@@ -53,7 +41,6 @@ void enable_optimizations()
 
 void Application::run()
 {
-    Camera camera;
     Cube cube;
 
     auto shader_res = Shader::create("shaders/vert.glsl", "shaders/frag.glsl");
@@ -68,8 +55,7 @@ void Application::run()
     shader.set_matrix4(glm::perspective(glm::radians(45.0f), 
         m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
 
-    PerlinNoise noise;
-    auto fbm = std::make_shared<FBM>(noise);
+    auto fbm = std::make_shared<FBM>(std::make_shared<PerlinNoise>());
 
     TerrainMesh mesh(fbm, 4, 4);
 
@@ -86,9 +72,9 @@ void Application::run()
 
         shader.use();
 
-        shader.set_matrix4(camera.get_view_matrix(), "view");
-        shader.set_float3(camera.get_position(), "u_camera_location");
-        shader.set_float3(camera.get_position(), "u_light_location");
+        shader.set_matrix4(m_camera.get_view_matrix(), "view");
+        shader.set_float3(m_camera.get_position(), "u_camera_location");
+        shader.set_float3(m_camera.get_position(), "u_light_location");
         shader.set_float3({1.f, 1.f, 1.f}, "u_light_color");
         shader.set_float3({1.0f, 0.0f, 0.0f}, "u_target_color");
         glm::mat4 model(1.0f);
@@ -104,7 +90,7 @@ void Application::run()
         shader.set_float3({0.0f, 0.31f, 0.42f}, "u_target_color");
         mesh.draw(shader);
 
-        camera.process_keyboard(input, delta_time);
+        m_camera.process_keyboard(input, delta_time);
 
         glfwSwapBuffers(m_window.get_window());
         glfwPollEvents();
@@ -125,11 +111,11 @@ void Application::update()
 {
     //auto &shader = m_shaders.at("terrain_mesh");
     //shader.use();
-    //shader.set_matrix4(m_camera.get_view_matrix(), "view");
+    //shader.set_matrix4(m_m_camera.get_view_matrix(), "view");
     //shader.set_matrix4(glm::perspective(glm::radians(45.0f), 
     //    m_window.width() / (float)m_window.height(), 0.1f, 100.f), "proj");
-    //shader.set_float3(m_camera.get_position(), "u_camera_location");
-    //shader.set_float3(m_camera.get_position(), "u_light_location");
+    //shader.set_float3(m_m_camera.get_position(), "u_m_camera_location");
+    //shader.set_float3(m_m_camera.get_position(), "u_light_location");
     //shader.set_float3({1.f, 1.f, 1.f}, "u_light_color");
 
     //shader.set_float3({1.0f, 0.0f, 0.0f}, "u_target_color");
